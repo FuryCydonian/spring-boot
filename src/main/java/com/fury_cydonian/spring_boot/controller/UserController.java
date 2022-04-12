@@ -58,4 +58,10 @@ public class UserController {
         return "redirect:/users";
     }
 
+    @GetMapping("/user")
+    public String userInfo(@ModelAttribute("user") User user) {
+
+        return "user";
+    }
+
 }

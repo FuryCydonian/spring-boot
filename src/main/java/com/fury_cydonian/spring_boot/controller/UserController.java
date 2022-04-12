@@ -56,9 +56,10 @@ public class UserController {
         return "redirect:/users";
     }
 
-    @GetMapping("/user")
-    public String userInfo(@ModelAttribute("user") User user) {
-
+    @GetMapping("/{id}")
+    public String userInfo(@PathVariable("id") long id, Model model) {
+        User user = userService.getUserById(id);
+        model.addAttribute(user);
         return "user";
     }
 

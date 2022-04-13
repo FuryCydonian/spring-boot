@@ -38,18 +38,16 @@ public class User implements UserDetails {
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private Status status;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // TODO
-//        Collection<Role> roles = List.of(this.getRole().);
-        return null;
+        return roles;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return email;
     }
 
     @Override

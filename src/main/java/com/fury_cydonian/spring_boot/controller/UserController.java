@@ -57,12 +57,9 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public String mainPage(Model model, Principal principal) throws UserPrincipalNotFoundException {
-        if (principal == null) {
-            throw new UserPrincipalNotFoundException("!!!Not Found!!!");
-        }
-        User user = userService.findUserByEmail(principal.getName());
-        model.addAttribute(user);
+    public String mainPage(Model model) {
+//        User user = userService.findUserByEmail(principal.getName());
+//        model.addAttribute(user);
         return "index";
     }
 

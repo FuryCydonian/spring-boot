@@ -34,11 +34,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
 
     @Autowired
-    public WebSecurityConfig(SuccessUserHandler successUserHandler,
-                             @Qualifier("UserServiceImpl") UserDetailsService userDetailsService) {
+    public WebSecurityConfig(SuccessUserHandler successUserHandler, @Qualifier("UserServiceImpl") UserDetailsService userDetailsService) {
         this.successUserHandler = successUserHandler;
         this.userDetailsService = userDetailsService;
     }
+
+//    public WebSecurityConfig(SuccessUserHandler successUserHandler,
+//                             @Qualifier("UserServiceImpl") UserDetailsService userDetailsService) {
+//        this.successUserHandler = successUserHandler;
+//        this.userDetailsService = userDetailsService;
+//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -64,7 +69,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     protected PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(12);
     }
 
     @Override

@@ -1,13 +1,14 @@
 package com.fury_cydonian.spring_boot.model;
 
 import lombok.Data;
+import org.hibernate.boot.model.source.internal.hbm.HbmMetadataSourceProcessorImpl;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -31,18 +32,20 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @Enumerated(value = EnumType.STRING)
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-//    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    private Set<Role> roles;
+    @ManyToMany
+    @JoinTable(name = "users_roles",
+                joinColumns = @JoinColumn(name = "user_id"),
+                inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Collection<Role> roles;
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "status")
-    private Status status;
+//    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
+//        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getName())).collect(Collectors.toList());
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
+//        return mapRolesToAuthorities(roles);
     }
 
     @Override
@@ -52,21 +55,21 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return getStatus().equals(Status.ACTIVE);
+        return false;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return getStatus().equals(Status.ACTIVE);
+        return false;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return getStatus().equals(Status.ACTIVE);
+        return false;
     }
 
     @Override
     public boolean isEnabled() {
-        return getStatus().equals(Status.ACTIVE);
+        return false;
     }
 }

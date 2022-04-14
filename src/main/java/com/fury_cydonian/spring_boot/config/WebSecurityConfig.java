@@ -29,20 +29,15 @@ import javax.sql.DataSource;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private DataSource dataSource;
+    private final SuccessUserHandler successUserHandler;
 
-    private SuccessUserHandler successUserHandler;
-
-    private UserRepository userRepository;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public WebSecurityConfig(SuccessUserHandler successUserHandler
-                             , DataSource dataSource
-                             , UserRepository userRepository
-    ) {
+    public WebSecurityConfig(SuccessUserHandler successUserHandler,
+                             @Qualifier("UserServiceImpl") UserDetailsService userDetailsService) {
         this.successUserHandler = successUserHandler;
-        this.dataSource = dataSource;
-        this.userRepository = userRepository;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -50,8 +45,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers("users/**", "/admin").hasRole(ADMIN.name())
-                .antMatchers("/user").hasAnyRole(ADMIN.name(), USER.name())
+                .antMatchers("users/**", "/admin").hasRole("ADMIN")
+                .antMatchers("/user").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().successHandler(successUserHandler)
@@ -68,46 +63,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    @Override
-    protected UserDetailsService userDetailsService() {
-//        UserDetails user =
-//                User.builder()
-//                        .username("user")
-//                        .password(passwordEncoder().encode("user"))
-//                        .roles(Role.USER.name())
-//                        .build();
-//        UserDetails admin =
-//                User.builder()
-//                        .username("admin")
-//                        .password(passwordEncoder().encode("admin"))
-//                        .roles(Role.ADMIN.name())
-//                        .build();
-
-        return email -> userRepository.findByEmail(email).orElseThrow(() ->
-        new UsernameNotFoundException("User doesn't exist"));
-    }
-
-    @Bean
     protected PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
     }
-
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userDetailsService());
-//    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 
-// TODO Сделать в БД нормально поля, зашифровать пароль, доделать роли, доделать БД. Посмотреть еще видосы RomanianCoder and AmigosCode
     @Bean
     protected DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        daoAuthenticationProvider.setUserDetailsService(userDetailsService());
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
         return daoAuthenticationProvider;
     }
 }

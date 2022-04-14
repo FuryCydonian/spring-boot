@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -52,6 +54,16 @@ public class UserController {
     public String deleteUser(@PathVariable("id") long id) {
         userService.deleteUser(id);
         return "redirect:/users";
+    }
+
+    @GetMapping("/")
+    public String mainPage(Model model, Principal principal) throws UserPrincipalNotFoundException {
+        if (principal == null) {
+            throw new UserPrincipalNotFoundException("!!!Not Found!!!");
+        }
+        User user = userService.findUserByEmail(principal.getName());
+        model.addAttribute(user);
+        return "index";
     }
 
 //    @GetMapping("/users/{id}")

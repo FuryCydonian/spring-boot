@@ -22,7 +22,7 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
         String name = authentication.getName();
 
         if (roles.contains("ROLE_USER")) {
-            httpServletResponse.sendRedirect("/users");
+            httpServletResponse.sendRedirect("/user");
             // TODO
         } else if (roles.contains("ROLE_ADMIN")) {
             httpServletResponse.sendRedirect("/admin");

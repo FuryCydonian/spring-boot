@@ -1,6 +1,8 @@
 package com.fury_cydonian.spring_boot.config;
 
-import com.fury_cydonian.spring_boot.model.Role;
+import static com.fury_cydonian.spring_boot.model.Role.*;
+import com.fury_cydonian.spring_boot.repository.UserRepository;
+import com.fury_cydonian.spring_boot.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -30,24 +33,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private SuccessUserHandler successUserHandler;
 
-    private UserDetailsService userDetailsService;
+    private UserRepository userRepository;
 
     @Autowired
     public WebSecurityConfig(SuccessUserHandler successUserHandler
                              , DataSource dataSource
-                             , @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService
+                             , UserRepository userRepository
     ) {
         this.successUserHandler = successUserHandler;
         this.dataSource = dataSource;
-        this.userDetailsService = userDetailsService;
+        this.userRepository = userRepository;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/index").permitAll()
-                .antMatchers("users/create", "users/{id}/edit", "users/{id}/delete").hasRole(Role.ADMIN.name())
+                .antMatchers("/").permitAll()
+                .antMatchers("users/**", "/admin").hasRole(ADMIN.name())
+                .antMatchers("/user").hasAnyRole(ADMIN.name(), USER.name())
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().successHandler(successUserHandler)
@@ -63,9 +67,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .deleteCookies("JSESSIONID");
     }
 
-//    @Bean
-//    @Override
-//    protected UserDetailsService userDetailsService() {
+    @Bean
+    @Override
+    protected UserDetailsService userDetailsService() {
 //        UserDetails user =
 //                User.builder()
 //                        .username("user")
@@ -78,35 +82,32 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                        .password(passwordEncoder().encode("admin"))
 //                        .roles(Role.ADMIN.name())
 //                        .build();
-//
-//        return new InMemoryUserDetailsManager(
-//                user,
-//                admin
-//        );
-//    }
+
+        return email -> userRepository.findByEmail(email).orElseThrow(() ->
+        new UsernameNotFoundException("User doesn't exist"));
+    }
 
     @Bean
     protected PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication()
-                .dataSource(dataSource);
-    }
-
 //    @Override
 //    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.authenticationProvider(daoAuthenticationProvider());
+//        auth.userDetailsService(userDetailsService());
 //    }
 
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(daoAuthenticationProvider());
+    }
 
-//    @Bean
-//    protected DaoAuthenticationProvider daoAuthenticationProvider() {
-//        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-//        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-//        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
-//        return daoAuthenticationProvider;
-//    }
+// TODO Сделать в БД нормально поля, зашифровать пароль, доделать роли, доделать БД. Посмотреть еще видосы RomanianCoder and AmigosCode
+    @Bean
+    protected DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService());
+        return daoAuthenticationProvider;
+    }
 }

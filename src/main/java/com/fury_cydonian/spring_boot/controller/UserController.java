@@ -13,7 +13,6 @@ import java.util.List;
 //TODO Сделать вместо PreAuthority наверное как-то в настройках ограничения, в WebSecurityConfig, епреопределить эндпоинты и страницы в целом
 
 @Controller
-@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -23,7 +22,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
+    @GetMapping("/users")
     public String getUsers(Model model) {
 //        userService.createTable();
         List<User> users = userService.getAllUsers();
@@ -31,42 +30,48 @@ public class UserController {
         return "users";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/users/create")
     public String createUserForm(@ModelAttribute("user") User user) {
         return "create";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/users/create")
     @PreAuthorize("hasAuthority('ADMIN')")
     public String createUser(@ModelAttribute("user") User user) {
         userService.saveUser(user);
         return "redirect:/users";
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("/users/{id}/edit")
     @PreAuthorize("hasAuthority('ADMIN')")
     public String updateUserForm(@PathVariable("id") long id, @ModelAttribute("user") User user) {
         return "edit";
     }
 
-    @PostMapping("/{id}/edit")
+    @PostMapping("/users/{id}/edit")
     public String updateUser(@PathVariable("id") long id, @ModelAttribute("user") User user) {
         userService.saveUser(user);
         return "redirect:/users";
     }
 
-    @GetMapping("/{id}/delete")
+    @GetMapping("/users/{id}/delete")
     @PreAuthorize("hasAuthority('ADMIN')")
     public String deleteUser(@PathVariable("id") long id) {
         userService.deleteUser(id);
         return "redirect:/users";
     }
 
-    @GetMapping("/{id}")
-    public String userInfo(@PathVariable("id") long id, Model model) {
-        User user = userService.getUserById(id);
-        model.addAttribute(user);
-        return "user";
-    }
+//    @GetMapping("/users/{id}")
+//    public String userInfo(@PathVariable("id") long id, Model model) {
+//        User user = userService.getUserById(id);
+//        model.addAttribute(user);
+//        return "user";
+//    }
+
+//    @GetMapping("/user/{id}")
+//    public String userInfo(@PathVariable long id, Model model) {
+//
+//        return "user";
+//    }
 
 }

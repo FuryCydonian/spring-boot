@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class AdminController {
 
-    @GetMapping("/admin")
-    public String successAdmin() {
-        return "admin";
-    }
+//    @GetMapping("/admin")
+//    public String successAdmin() {
+//        return "admin";
+//    }
 }

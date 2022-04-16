@@ -42,7 +42,6 @@ public class User implements UserDetails {
     }
 
     public User() {
-
     }
 
     public long getId() {

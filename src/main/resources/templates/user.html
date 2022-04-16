@@ -10,16 +10,19 @@
 </head>
 <body>
 
-<h1>Welcome, <span th:text="${user.getFirstName()}"></span>!</h1>
+<h1>User information-page</h1>
 <table class="table table-striped table-responsive-md">
     <tr>
+        <th>ID</th>
         <th>name</th>
-        <th>last_name</th>
         <th>email</th>
+        <th>ROLE</th>
     </tr>
     <tr>
+        <td th:text="${user.getId()}"></td>
         <td th:text="${user.getFirstName()}"></td>
         <td th:text="${user.getEmail()}"></td>
+        <td th:text="${user.getRoles().stream().findFirst()}"></td>
     </tr>
 </table>
 

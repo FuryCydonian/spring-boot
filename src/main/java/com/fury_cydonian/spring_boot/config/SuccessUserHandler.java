@@ -17,26 +17,15 @@ import java.util.Set;
 @Component
 public class SuccessUserHandler implements AuthenticationSuccessHandler {
 
-    private final UserService userService;
-
-    @Autowired
-    public SuccessUserHandler(UserService userService) {
-        this.userService = userService;
-    }
-
     // Spring Security использует объект Authentication пользователя авторизованной сессии.
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
                                         HttpServletResponse httpServletResponse,
                                         Authentication authentication) throws IOException {
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
-        // TODO
-        String name = authentication.getName();
-        User user = userService.findUserByEmail(name);
 
         if (roles.contains("ROLE_USER")) {
             httpServletResponse.sendRedirect("/user");
-            // TODO
         } else if (roles.contains("ROLE_ADMIN")) {
             httpServletResponse.sendRedirect("/admin");
         } else {

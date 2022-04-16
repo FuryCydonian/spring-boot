@@ -23,7 +23,7 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public String successAdmin() {
+    public String successAdmin(@ModelAttribute("user") User user) {
         return "admin";
     }
 

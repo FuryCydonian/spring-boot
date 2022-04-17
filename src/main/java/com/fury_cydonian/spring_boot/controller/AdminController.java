@@ -23,7 +23,10 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public String successAdmin(@ModelAttribute("user") User user) {
+    public String successAdmin(User user, Model model) {
+        List<User> users = userService.getAllUsers();
+        model.addAttribute("users", users);
+        model.addAttribute("user", user);
         return "admin";
     }
 

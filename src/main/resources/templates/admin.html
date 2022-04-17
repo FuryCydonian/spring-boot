@@ -10,86 +10,111 @@
 </head>
 
 <body>
-    <div class="container">
-        <h1>Admin panel</h1>
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#users" role="tab" aria-controls="home" aria-selected="true">Users table</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="create">New user</a>
-            </li>
-        </ul>
+    <header class="container-fluid bg-dark">
+        <nav class="d-flex justify-content-between text-white navbar" style="margin-bottom: 15px;">
+            <div class="p-2">
+                <span th:text="${user.getEmail()}">олвыа</span>
+                <span> with toles: </span>
+                <span th:each="role : ${user.getRoles()}">
+                    <span th:text="${role.getName().substring(5)}">вывав</span>
+                </span>
+            </div>
+            <div class="p-2 text-secondary">Logout</div>
+        </nav>
+    </header>
+    <div class="container-fluid justify-content-between mx-0 px-0" >
+        <section class="row justify-content-between">
+            <nav class="col-2 flex-column">
+                <a class="nav-link active" href="#" style="background-color: #007bff; color: white;">Admin</a>
+                <a class="nav-link" href="/user">User</a>
+            </nav>
 
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="home-tab">
-                <div class="container">
+            <div class="col-10">
+                <h1>Admin panel</h1>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#users" role="tab"
+                           aria-controls="home" aria-selected="true">Users table</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/users/create">New user</a>
+                    </li>
+                </ul>
 
-                    <table class="table table-striped table-responsive-md">
-                        <caption class="table-caption">All users</caption>
-                        <tr>
-                            <th>name</th>
-                            <th>email</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                        </tr>
-                        <!--        <th:block >-->
-                        <tr th:each="user : ${users}">
-                            <td th:text="${user.getFirstName()}"></td>
-                            <td th:text="${user.getEmail()}"></td>
-                            <td>
-                                <a class="btn btn-secondary btn-lg" role="button"
-                                   th:href="@{/users/{id}/edit/(id=${user.getId()})}">Edit</a>
-                            </td>
-                            <td>
-                                <a class="btn btn-danger btn-lg" role="button"
-                                   th:href="@{users/{id}/delete(id=${user.getId()})}">Delete</a>
-                            </td>
-                        </tr>
-                        <!--        </th:block>-->
-                    </table>
-                    <a class="btn btn-primary btn-lg" role="button" href="/users/create">Create User</a>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active card" id="users" role="tabpanel" aria-labelledby="home-tab">
+                        <h4 class="bg-light card-header">All users</h4>
+                        <div class="container ">
+                            <table class="table table-striped card-body mt-3">
+                                <tr>
+                                    <th>name</th>
+                                    <th>email</th>
+                                    <th>Role</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                </tr>
+                                <!--        <th:block >-->
+                                <tr th:each="user : ${users}">
+                                    <td th:text="${user.getFirstName()}"></td>
+                                    <td th:text="${user.getEmail()}"></td>
+                                    <td th:each="role : ${user.getRoles()}">
+                                        <span th:text="${role.getName().substring(5)}"></span>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-info btn-sm" role="button"
+                                           th:href="@{/users/{id}/edit/(id=${user.getId()})}">Edit</a>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-danger btn-sm" role="button"
+                                           th:href="@{users/{id}/delete(id=${user.getId()})}">Delete</a>
+                                    </td>
+                                </tr>
+                                <!--        </th:block>-->
+                            </table>
+                            <!--                    <a class="btn btn-primary btn-lg" role="button" href="/users/create">Create User</a>-->
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="create" role="tabpanel" aria-labelledby="profile-tab">
-                <div class="container">
-                    <form th:method="POST" th:action="@{/users/create}" th:object="${user}">
-                        <div class="mb-3">
-                            <label for="firstName">First Name</label>
-                            <input class="form-control" type="text" th:field="*{firstName}" id="firstName"
-                                   placeholder="Enter First Name">
-                        </div>
+        </section>
+        <!--            <div class="tab-pane fade" id="create" role="tabpanel" aria-labelledby="profile-tab">-->
+        <!--                <div class="container">-->
+        <!--                    <form th:method="POST" th:action="@{/users/create}" th:object="${user}">-->
+        <!--                        <div class="mb-3">-->
+        <!--                            <label for="firstName">First Name</label>-->
+        <!--                            <input class="form-control" type="text" th:field="*{firstName}" id="firstName"-->
+        <!--                                   placeholder="Enter First Name">-->
+        <!--                        </div>-->
 
-                        <div class="mb-3">
-                            <label for="email">Email</label>
-                            <input class="form-control" type="email" th:field="*{email}" id="email" placeholder="Enter Email">
-                        </div>
+        <!--                        <div class="mb-3">-->
+        <!--                            <label for="email">Email</label>-->
+        <!--                            <input class="form-control" type="email" th:field="*{email}" id="email" placeholder="Enter Email">-->
+        <!--                        </div>-->
 
-                        <div class="mb-3">
-                            <label for="password">Password</label>
-                            <input class="form-control" type="password" th:field="*{password}" id="password" placeholder="Enter Password">
-                        </div>
+        <!--                        <div class="mb-3">-->
+        <!--                            <label for="password">Password</label>-->
+        <!--                            <input class="form-control" type="password" th:field="*{password}" id="password" placeholder="Enter Password">-->
+        <!--                        </div>-->
 
-                        <button class="btn btn-primary btn-lg" type="submit">Create User</button>
-                    </form>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
-        </div>
+        <!--                        <button class="btn btn-primary btn-lg" type="submit">Create User</button>-->
+        <!--                    </form>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
 
-        <div class="row justify-content-center">
-            <div class="col-3">
-                <a href="/users" class="btn btn-primary btn-lg text-center" role="button">
-                    watch users list
-                </a>
-            </div>
-        </div>
+<!--        <div class="row justify-content-center">-->
+<!--            <div class="col-3">-->
+<!--                <a href="/users" class="btn btn-primary btn-lg text-center" role="button">-->
+<!--                    watch users list-->
+<!--                </a>-->
+<!--            </div>-->
+<!--        </div>-->
 
-        <div class="row justify-content-center">
-            <form class="col-3" th:action="@{/logout}" method="post">
-                <input class="btn btn-danger btn-lg" type="submit" value="Logout"/>
-            </form>
-        </div>
+<!--        <div class="row justify-content-center">-->
+<!--            <form class="col-3" th:action="@{/logout}" method="post">-->
+<!--                <input class="btn btn-danger btn-lg" type="submit" value="Logout"/>-->
+<!--            </form>-->
+<!--        </div>-->
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

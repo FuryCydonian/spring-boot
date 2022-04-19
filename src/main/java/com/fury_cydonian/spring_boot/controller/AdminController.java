@@ -63,6 +63,9 @@ public class AdminController {
 
     @PostMapping("/users/create")
     public String createUser(@ModelAttribute("user") User user, @RequestParam("roles") Long[] roles) {
+        if (userService.getUserByEmail(user.getEmail()) != null) {
+            throw new RuntimeException("User already exists");
+        }
         Set<Role> roleSet = Arrays.stream(roles).map(roleService::getRoleById).collect(Collectors.toSet());
         user.setRoles(roleSet);
         userService.saveUser(user);
@@ -70,8 +73,8 @@ public class AdminController {
     }
 
     @GetMapping("/users/{id}/edit")
-    public String updateUserForm(Model model) {
-        User user = new User();
+    public String updateUserForm(@PathVariable("id") long id, Model model) {
+        User user = userService.getUserById(id);
         model.addAttribute("roles", roleService.getRoles());
         model.addAttribute("user", user);
         return "edit";

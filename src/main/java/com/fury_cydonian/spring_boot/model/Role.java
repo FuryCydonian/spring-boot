@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "roles")
@@ -19,7 +20,7 @@ public class Role implements GrantedAuthority {
 //    @JoinTable(name = "users_roles",
 //            joinColumns = @JoinColumn(name = "role_id"),
 //            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Collection<User> users;
+    private Set<User> users;
 
     public Role(int id, String name) {
         this.id = id;
@@ -49,12 +50,17 @@ public class Role implements GrantedAuthority {
         return users;
     }
 
-    public void setUsers(Collection<User> users) {
+    public void setUsers(Set<User> users) {
         this.users = users;
     }
 
     @Override
     public String getAuthority() {
         return getName(); //must be with prefix "ROLE_" in DB
+    }
+
+    @Override
+    public String toString() {
+        return name.substring(5);
     }
 }

@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container">
-        <form th:method="POST" th:action="@{/users/create}" th:object="${user}">
+        <form th:method="POST" th:action="@{admin/users/create}" th:object="${user}">
             <div class="mb-3">
                 <label for="firstName">First Name</label>
                 <input class="form-control" type="text" th:field="*{firstName}" id="firstName"
@@ -19,6 +19,11 @@
             <div class="mb-3">
                 <label for="email">Email</label>
                 <input class="form-control" type="email" th:field="*{email}" id="email" placeholder="Enter Email">
+            </div>
+
+            <div class="mb-3">
+                <label for="role">Role</label>
+                <input class="form-control" type="text" th:field="*{roles}" id="role" placeholder="Enter Roles">
             </div>
 
             <div class="mb-3">

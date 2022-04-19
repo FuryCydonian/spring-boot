@@ -16,6 +16,7 @@
             <tr>
                 <th>name</th>
                 <th>email</th>
+                <th>Roles</th>
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
@@ -23,18 +24,20 @@
             <tr th:each="user : ${users}">
                 <td th:text="${user.getFirstName()}"></td>
                 <td th:text="${user.getEmail()}"></td>
+                <td th:text="${user.getRoles()}"></td>
+                <td th:text="${user.getRoles()}"></td>
                 <td>
                     <a class="btn btn-secondary btn-lg" role="button"
-                       th:href="@{/users/{id}/edit/(id=${user.getId()})}">Edit</a>
+                       th:href="@{/admin/users/{id}/edit/(id=${user.getId()})}">Edit</a>
                 </td>
                 <td>
                     <a class="btn btn-danger btn-lg" role="button"
-                       th:href="@{users/{id}/delete(id=${user.getId()})}">Delete</a>
+                       th:href="@{admin/users/{id}/delete(id=${user.getId()})}">Delete</a>
                 </td>
             </tr>
             <!--        </th:block>-->
         </table>
-        <a class="btn btn-primary btn-lg" role="button" href="/users/create">Create User</a>
+        <a class="btn btn-primary btn-lg" role="button" href="/admin/users/create">Create User</a>
     </div>
 
     <form class="container" th:action="@{/logout}" method="post">

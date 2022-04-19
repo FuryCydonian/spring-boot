@@ -14,7 +14,15 @@
 
         <div class="row justify-content-center">
             <div class="col-3">
-                <a href="/users" class="btn btn-primary btn-lg text-center" role="button">
+                <h2 class="">Your roles:</h2>
+                <ul>
+                    <th:block th:each="role : ${roles}">
+                        <li th:text="${role.getName().substring(5)}" class="text-black"></li>
+                    </th:block>
+
+                    <th:block ></th:block>
+                </ul>
+                <a href="/admin/users" class="btn btn-primary btn-lg text-center" role="button">
                     watch users list
                 </a>
             </div>

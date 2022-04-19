@@ -56,6 +56,7 @@ public class AdminController {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         Set<Role> roles = user.getRoles();
 //        user.setRoles(Collections.singleton(new Role(2, "ROLE_USER")));
+
         return "redirect:/admin/users";
     }
 

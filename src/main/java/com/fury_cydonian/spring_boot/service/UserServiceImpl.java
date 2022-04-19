@@ -34,6 +34,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.getById(id);
     }
 
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -43,7 +47,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void saveUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-//        user.setRoles(Collections.singleton(new Role(2, "ROLE_USER")));
         userRepository.saveAndFlush(user);
     }
 

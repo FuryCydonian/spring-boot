@@ -5,6 +5,7 @@ import com.fury_cydonian.spring_boot.model.User;
 import com.fury_cydonian.spring_boot.service.RoleService;
 import com.fury_cydonian.spring_boot.service.RoleServiceImpl;
 import com.fury_cydonian.spring_boot.service.UserService;
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,12 +16,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.management.relation.RoleNotFoundException;
 import java.security.Principal;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Controller
-//@RequestMapping("/admin")
+@RequestMapping("/admin")
 public class AdminController {
 
     private final UserService userService;
@@ -37,21 +39,21 @@ public class AdminController {
     }
 
 
-    @GetMapping("/admin")
+    @GetMapping()
     public String successAdmin(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("user", user);
         model.addAttribute("rolesAuthUser", user.getRoles());
         return "admin";
     }
 
-    @GetMapping("admin/users")
+    @GetMapping("/users")
     public String getUsers(Model model) {
         List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);
         return "users";
     }
 
-    @GetMapping("admin/users/create")
+    @GetMapping("/users/create")
     public String createUserForm(Model model) {
         User user = new User();
         model.addAttribute("roles", roleService.getRoles());
@@ -59,29 +61,34 @@ public class AdminController {
         return "create";
     }
 
-    @PostMapping("admin/users/create")
+    @PostMapping("/users/create")
     public String createUser(@ModelAttribute("user") User user, @RequestParam("roles") Long[] roles) {
         Set<Role> roleSet = Arrays.stream(roles).map(roleService::getRoleById).collect(Collectors.toSet());
         user.setRoles(roleSet);
         userService.saveUser(user);
-        return "users";
+        return "redirect:/admin/users";
     }
 
-    @GetMapping("admin/users/{id}/edit")
-    public String updateUserForm(@PathVariable("id") long id, @ModelAttribute("user") User user) {
+    @GetMapping("/users/{id}/edit")
+    public String updateUserForm(Model model) {
+        User user = new User();
+        model.addAttribute("roles", roleService.getRoles());
+        model.addAttribute("user", user);
         return "edit";
     }
 
-    @PostMapping("admin/users/{id}/edit")
-    public String updateUser(@PathVariable("id") long id, @ModelAttribute("user") User user) {
+    @PostMapping("/users/{id}/edit")
+    public String updateUser(@PathVariable("id") long id, @ModelAttribute("user") User user, @RequestParam("roles") Long[] roles,
+                             @AuthenticationPrincipal User authUser) {
+        Set<Role> roleSet = Arrays.stream(roles).map(roleService::getRoleById).collect(Collectors.toSet());
+        user.setRoles(roleSet);
         userService.saveUser(user);
         return "redirect:/admin/users";
     }
 
-    @GetMapping("admin/users/{id}/delete")
+    @GetMapping("/users/{id}/delete")
     public String deleteUser(@PathVariable("id") long id) {
         userService.deleteUser(id);
         return "redirect:/admin/users";
     }
-
 }

@@ -63,9 +63,6 @@ public class AdminController {
 
     @PostMapping("/users/create")
     public String createUser(@ModelAttribute("user") User user, @RequestParam("roles") Long[] roles) {
-        if (userService.getUserByEmail(user.getEmail()) != null) {
-            throw new RuntimeException("User already exists");
-        }
         Set<Role> roleSet = Arrays.stream(roles).map(roleService::getRoleById).collect(Collectors.toSet());
         user.setRoles(roleSet);
         userService.saveUser(user);

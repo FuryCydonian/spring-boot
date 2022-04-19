@@ -23,9 +23,13 @@
             </div>
 
             <div class="mb-3">
-                <label for="role">Role</label>
-                <input autocomplete="on" class="form-control" type="text" th:field="*{roles}" id="role"
-                       placeholder="Enter Role" th:value="${user.getRoles()}">
+                <label> Roles
+                    <select class="form-control" name="roles" id="roles" multiple size="2" th:field="*{roles}">
+                        <option th:each="role : ${user.getRoles()}" th:value="${role.getId()}"
+                                th:text="${role.toString()}">role
+                        </option>
+                    </select>
+                </label>
             </div>
 
             <div class="mb-3">

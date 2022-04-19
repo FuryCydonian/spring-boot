@@ -11,7 +11,7 @@ import java.util.Set;
 public class Role implements GrantedAuthority {
     @Id
     @Column(name = "id")
-    private int id;
+    private long id;
 
     private String name;
 
@@ -30,7 +30,7 @@ public class Role implements GrantedAuthority {
     public Role() {
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 

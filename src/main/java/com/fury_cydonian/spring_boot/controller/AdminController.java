@@ -2,79 +2,86 @@ package com.fury_cydonian.spring_boot.controller;
 
 import com.fury_cydonian.spring_boot.model.Role;
 import com.fury_cydonian.spring_boot.model.User;
+import com.fury_cydonian.spring_boot.service.RoleService;
+import com.fury_cydonian.spring_boot.service.RoleServiceImpl;
 import com.fury_cydonian.spring_boot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.relation.RoleNotFoundException;
 import java.security.Principal;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
-@RequestMapping("/admin")
+//@RequestMapping("/admin")
 public class AdminController {
 
-    private UserService userService;
+    private final UserService userService;
 
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final RoleService roleService;
+
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public AdminController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public AdminController(UserService userService, RoleService roleService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userService = userService;
+        this.roleService = roleService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-
     }
 
-    @GetMapping
-    public String successAdmin(Principal principal, Model model) {
-        User user = userService.findUserByEmail(principal.getName());
+
+    @GetMapping("/admin")
+    public String successAdmin(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("user", user);
-        model.addAttribute("roles", user.getRoles());
+        model.addAttribute("rolesAuthUser", user.getRoles());
         return "admin";
     }
 
-    @GetMapping("/users")
+    @GetMapping("admin/users")
     public String getUsers(Model model) {
         List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);
         return "users";
     }
 
-    @GetMapping("/users/create")
-    public String createUserForm(@ModelAttribute("user") User user) {
+    @GetMapping("admin/users/create")
+    public String createUserForm(Model model) {
+        User user = new User();
+        model.addAttribute("roles", roleService.getRoles());
+        model.addAttribute("user", user);
         return "create";
     }
 
-    @PostMapping("/users/create")
-    public String createUser(@ModelAttribute("user") User user) {
+    @PostMapping("admin/users/create")
+    public String createUser(@ModelAttribute("user") User user, @RequestParam("roles") Long[] roles) {
+        Set<Role> roleSet = Arrays.stream(roles).map(roleService::getRoleById).collect(Collectors.toSet());
+        user.setRoles(roleSet);
         userService.saveUser(user);
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        Set<Role> roles = user.getRoles();
-//        user.setRoles(Collections.singleton(new Role(2, "ROLE_USER")));
-
-        return "redirect:/admin/users";
+        return "users";
     }
 
-    @GetMapping("/users/{id}/edit")
+    @GetMapping("admin/users/{id}/edit")
     public String updateUserForm(@PathVariable("id") long id, @ModelAttribute("user") User user) {
         return "edit";
     }
 
-    @PostMapping("/users/{id}/edit")
+    @PostMapping("admin/users/{id}/edit")
     public String updateUser(@PathVariable("id") long id, @ModelAttribute("user") User user) {
         userService.saveUser(user);
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 
-    @GetMapping("/users/{id}/delete")
+    @GetMapping("admin/users/{id}/delete")
     public String deleteUser(@PathVariable("id") long id) {
         userService.deleteUser(id);
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 
 }

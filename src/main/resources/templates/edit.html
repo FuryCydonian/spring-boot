@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container">
-        <form th:method="POST" th:action="@{/users/{id}/edit(id=${user.getId()})}" th:object="${user}">
+        <form th:method="POST" th:action="@{/admin/users/{id}/edit(id=${user.getId()})}" th:object="${user}" autocomplete="on">
             <div class="mb-3">
                 <label for="firstName">First Name</label>
                 <input autocomplete="on" class="form-control" type="text" th:field="*{firstName}" id="firstName"
@@ -23,7 +23,17 @@
             </div>
 
             <div class="mb-3">
-                <label for="lastName">Last Name</label>
+                <label> Roles
+                    <select class="form-control" name="roles" id="" multiple size="2" th:field="*{roles}" required>
+                        <option th:each="role : ${roles}" th:value="${role.getId()}"
+                                th:text="${role.toString()}">role
+                        </option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="mb-3">
+                <label for="lastName">Password</label>
                 <input autocomplete="on" class="form-control" type="password" th:field="*{password}" id="lastName"
                        placeholder="Enter Password" th:value="${user.getPassword()}">
             </div>

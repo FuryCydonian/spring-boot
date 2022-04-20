@@ -13,10 +13,9 @@
     <header class="container-fluid bg-dark">
         <nav class="d-flex justify-content-between text-white navbar" style="margin-bottom: 15px;">
             <div class="p-2">
-                <span th:text="${user.getEmail()}">олвыа</span>
+                <span th:text="${user.getEmail()}"></span>
                 <span> with roles: </span>
-                <span th:each="role : ${user.getRoles()}">
-                    <span th:text="${role.getName().substring(5)}">вывав</span>
+                <span th:text="${user.getStringRoles()}">
                 </span>
             </div>
             <div class="p-2 text-secondary">Logout</div>

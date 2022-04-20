@@ -24,7 +24,7 @@
             <tr th:each="user : ${users}">
                 <td th:text="${user.getFirstName()}"></td>
                 <td th:text="${user.getEmail()}"></td>
-                <td th:text="${user.getRoles()}"></td>
+                <td th:text="${user.getStringRoles()}"></td>
                 <td>
                     <a class="btn btn-secondary btn-lg" role="button"
                        th:href="@{/admin/users/{id}/edit/(id=${user.getId()})}">Edit</a>

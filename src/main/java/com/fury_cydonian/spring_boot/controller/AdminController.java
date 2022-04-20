@@ -38,11 +38,12 @@ public class AdminController {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-
     @GetMapping()
-    public String successAdmin(@AuthenticationPrincipal User user, Model model) {
-        model.addAttribute("user", user);
-        model.addAttribute("rolesAuthUser", user.getRoles());
+    public String successAdmin(@AuthenticationPrincipal User authUser, Model model) {
+        model.addAttribute("user", authUser);
+        model.addAttribute("rolesAuthUser", authUser.getRoles());
+        List<User> users = userService.getAllUsers();
+        model.addAttribute("users", users);
         return "admin";
     }
 
@@ -66,7 +67,7 @@ public class AdminController {
         Set<Role> roleSet = Arrays.stream(roles).map(roleService::getRoleById).collect(Collectors.toSet());
         user.setRoles(roleSet);
         userService.saveUser(user);
-        return "redirect:/admin/users";
+        return "redirect:/admin";
     }
 
     @GetMapping("/users/{id}/edit")
@@ -83,12 +84,12 @@ public class AdminController {
         Set<Role> roleSet = Arrays.stream(roles).map(roleService::getRoleById).collect(Collectors.toSet());
         user.setRoles(roleSet);
         userService.saveUser(user);
-        return "redirect:/admin/users";
+        return "redirect:/admin";
     }
 
     @GetMapping("/users/{id}/delete")
     public String deleteUser(@PathVariable("id") long id) {
         userService.deleteUser(id);
-        return "redirect:/admin/users";
+        return "redirect:/admin";
     }
 }

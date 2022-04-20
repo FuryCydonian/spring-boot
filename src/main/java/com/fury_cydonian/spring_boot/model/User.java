@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -72,6 +73,13 @@ public class User implements UserDetails {
 
     public Set<Role> getRoles() {
         return roles;
+    }
+
+    public String getStringRoles() {
+//        String string = getRoles().stream().map(r -> r.toString()).collect(Collectors.toSet()).toString();
+//        String string = roles.toString();
+        return roles.toString().substring(1, roles.toString().lastIndexOf(']'));
+//        return newString;
     }
 
     public void setRoles(Set<Role> roles) {

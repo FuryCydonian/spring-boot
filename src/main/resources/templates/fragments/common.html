@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <th:block th:fragment="meta">
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="author" content=""/>
+        <meta name="description" content=""/>
+        <meta name="generator" content=""/>
+    </th:block>
+
+    <th:block th:fragment="styles">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    </th:block>
+
+    <th:block th:fragment="users_table">
+
+    </th:block>
+
+    <th:block th:fragment="new_user">
+
+    </th:block>
+
+
+    <th:block th:fragment="header">
+        <header class="container-fluid bg-dark">
+            <nav class="d-flex justify-content-between text-white navbar" style="margin-bottom: 15px;">
+                <div class="p-2">
+                    <span th:text="${user.getEmail()}"></span>
+                    <span> with roles: </span>
+                    <span th:text="${user.getStringRoles()}">
+                </span>
+                </div>
+                <div class="p-2 text-secondary">Logout</div>
+            </nav>
+        </header>
+    </th:block>
+
+</html>

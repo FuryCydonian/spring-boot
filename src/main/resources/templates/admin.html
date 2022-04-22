@@ -8,20 +8,20 @@
 </head>
 
 <body>
-<!--    <header class="container-fluid bg-dark">-->
-<!--        <nav class="d-flex justify-content-between text-white navbar" style="margin-bottom: 15px;">-->
-<!--            <div class="p-2">-->
-<!--                <span th:text="${user.getEmail()}"></span>-->
-<!--                <span> with roles: </span>-->
-<!--                <span th:text="${user.getStringRoles()}">-->
-<!--                </span>-->
-<!--            </div>-->
-<!--            <div class="p-2 text-secondary">Logout</div>-->
-<!--        </nav>-->
-<!--    </header>-->
-    <th:block th:insert="fragments/common.html :: header">
+    <header class="container-fluid bg-dark">
+        <nav class="d-flex justify-content-between text-white navbar" style="margin-bottom: 15px;">
+            <div class="p-2">
+                <span th:text="${user.getEmail()}"></span>
+                <span class=""> with roles: </span>
+                <span th:text="${user.getStringRoles()}">
+                </span>
+            </div>
+            <div class="p-2 text-secondary">Logout</div>
+        </nav>
+    </header>
+<!--    <th:block th:insert="fragments/common.html :: header">-->
 
-    </th:block>
+<!--    </th:block>-->
     <div class="container-fluid justify-content-between mx-0 px-0" >
         <section class="row justify-content-between">
             <nav class="col-2 flex-column">
@@ -44,7 +44,7 @@
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active card" id="users" role="tabpanel" aria-labelledby="home-tab">
                         <h4 class="bg-light card-header">All users</h4>
-                        <div class="container ">
+                        <div class="container-fluid">
                             <table class="table table-striped card-body mt-3">
                                 <tr>
                                     <th>name</th>

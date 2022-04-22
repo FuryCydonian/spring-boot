@@ -21,18 +21,16 @@
     </th:block>
 
 
-    <th:block th:fragment="header">
-        <header class="container-fluid bg-dark">
-            <nav class="d-flex justify-content-between text-white navbar" style="margin-bottom: 15px;">
-                <div class="p-2">
-                    <span th:text="${user.getEmail()}"></span>
-                    <span> with roles: </span>
-                    <span th:text="${user.getStringRoles()}">
-                </span>
-                </div>
-                <div class="p-2 text-secondary">Logout</div>
-            </nav>
-        </header>
-    </th:block>
+    <header th:fragment="header" class="container-fluid bg-dark">
+        <nav class="d-flex justify-content-between text-white navbar" style="margin-bottom: 15px;">
+            <div class="p-2">
+                <span th:text="${user.getEmail()}"></span>
+                <span class="text-bold"> with roles: </span>
+                <span th:text="${user.getStringRoles()}">
+            </span>
+            </div>
+            <div class="p-2 text-secondary">Logout</div>
+        </nav>
+    </header>
 
 </html>

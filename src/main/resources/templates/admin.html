@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <head>
+<!--    <th:block th:insert="fragments/common :: styles"></th:block>-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
     <meta charset="UTF-8">
+<!--    <th:block th:insert="fragments/common.html :: meta"></th:block>-->
     <title>Admin page</title>
 
 </head>
 
 <body>
     <header class="container-fluid bg-dark">
-        <nav class="d-flex justify-content-between text-white navbar" style="margin-bottom: 15px;">
+        <nav class="d-flex justify-content-between text-white navbar mb-2" >
             <div class="p-2">
                 <span th:text="${user.getEmail()}"></span>
                 <span class=""> with roles: </span>
@@ -19,9 +21,8 @@
             <div class="p-2 text-secondary">Logout</div>
         </nav>
     </header>
-<!--    <th:block th:insert="fragments/common.html :: header">-->
+<!--    <th:block th:insert="fragments/common.html :: header"></th:block>-->
 
-<!--    </th:block>-->
     <div class="container-fluid justify-content-between mx-0 px-0" >
         <section class="row justify-content-between">
             <nav class="col-2 flex-column">
@@ -32,12 +33,13 @@
             <div class="col-10">
                 <h1>Admin panel</h1>
                 <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#users" role="tab"
+                    <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#users" role="tab"
                            aria-controls="home" aria-selected="true">Users table</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/users/create">New user</a>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="create-tab" data-toggle="tab" href="#new_user" role="tab"
+                           aria-controls="create" aria-selected="false">New user</a>
                     </li>
                 </ul>
 
@@ -53,7 +55,6 @@
                                     <th>Edit</th>
                                     <th>Delete</th>
                                 </tr>
-                                <!--        <th:block >-->
                                 <tr th:each="user : ${users}">
                                     <td th:text="${user.getFirstName()}"></td>
                                     <td th:text="${user.getEmail()}"></td>
@@ -69,37 +70,53 @@
                                            th:href="@{/admin/users/{id}/delete(id=${user.getId()})}">Delete</a>
                                     </td>
                                 </tr>
-                                <!--        </th:block>-->
                             </table>
-                            <!--                    <a class="btn btn-primary btn-lg" role="button" href="/users/create">Create User</a>-->
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade card" id="new_user" role="tabpanel" aria-labelledby="create-tab">
+                        <h4 class="bg-light card-header">Add new user</h4>
+                        <div class="container-fluid card-body d-flex justify-content-center">
+                            <form th:method="POST" th:action="@{/admin/users/create}" th:object="${new_user}"
+                                  class="text-center">
+                                <div class="mb-3 ">
+                                    <label for="firstName"><strong>First Name</strong></label>
+                                    <input class="form-control" type="text" th:field="*{firstName}"
+                                           id="firstName"
+                                           placeholder="Enter First Name">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="email"><strong>Email</strong></label>
+                                    <input required class="form-control" type="email" th:field="*{email}" id="email"
+                                            placeholder="Enter Email">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="password"><strong>Password</strong></label>
+                                    <input required class="form-control" type="password" th:field="*{password}" id="password"
+                                            placeholder="Enter Password">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="roles"><strong>Role</strong></label>
+                                    <select required class="form-control" name="roles" id="roles" multiple size="2"
+                                             th:field="*{roles}">
+                                        <option th:each="role : ${roles}" th:value="${role.getId()}"
+                                                th:text="${role.toString()}">role
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <button class="btn btn-success btn-lg" type="submit">Add new user</button>
+                            </form>
                         </div>
                     </div>
                 </div>
+
             </div>
         </section>
-        <!--            <div class="tab-pane fade" id="create" role="tabpanel" aria-labelledby="profile-tab">-->
-        <!--                <div class="container">-->
-        <!--                    <form th:method="POST" th:action="@{/users/create}" th:object="${user}">-->
-        <!--                        <div class="mb-3">-->
-        <!--                            <label for="firstName">First Name</label>-->
-        <!--                            <input class="form-control" type="text" th:field="*{firstName}" id="firstName"-->
-        <!--                                   placeholder="Enter First Name">-->
-        <!--                        </div>-->
 
-        <!--                        <div class="mb-3">-->
-        <!--                            <label for="email">Email</label>-->
-        <!--                            <input class="form-control" type="email" th:field="*{email}" id="email" placeholder="Enter Email">-->
-        <!--                        </div>-->
-
-        <!--                        <div class="mb-3">-->
-        <!--                            <label for="password">Password</label>-->
-        <!--                            <input class="form-control" type="password" th:field="*{password}" id="password" placeholder="Enter Password">-->
-        <!--                        </div>-->
-
-        <!--                        <button class="btn btn-primary btn-lg" type="submit">Create User</button>-->
-        <!--                    </form>-->
-        <!--                </div>-->
-        <!--            </div>-->
         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
 
 <!--        <div class="row justify-content-center">-->

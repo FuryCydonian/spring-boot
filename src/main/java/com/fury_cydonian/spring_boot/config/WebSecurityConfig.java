@@ -43,13 +43,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .successHandler(successUserHandler)
                 .and()
                 .logout()
-                    .permitAll()
-                .and()
-                .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
-                    .invalidateHttpSession(true)
-                    .clearAuthentication(true)
-                    .deleteCookies("JSESSIONID");
+                    .permitAll();
+//                .and()
+//                .logout()
+//                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
+//                    .invalidateHttpSession(true)
+//                    .clearAuthentication(true)
+//                    .deleteCookies("JSESSIONID");
     }
 
     @Bean("bCryptPasswordEncoder")

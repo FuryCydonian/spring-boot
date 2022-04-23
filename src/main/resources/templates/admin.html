@@ -10,40 +10,49 @@
 </head>
 
 <body>
+
+<!--    Header-->
     <header class="container-fluid bg-dark">
         <nav class="d-flex justify-content-between text-white navbar mb-2" >
             <div class="p-2">
-                <span th:text="${user.getEmail()}"></span>
+                <strong th:text="${auth_user.getEmail()}"></strong>
                 <span class=""> with roles: </span>
-                <span th:text="${user.getStringRoles()}">
+                <span th:text="${auth_user.getStringRoles()}">
                 </span>
             </div>
-            <div class="p-2 text-secondary">Logout</div>
+            <a class="p-2 text-secondary" th:href="@{/logout}" th:method="GET">Logout</a>
         </nav>
     </header>
 <!--    <th:block th:insert="fragments/common.html :: header"></th:block>-->
 
+<!--    Page under header-->
     <div class="container-fluid justify-content-between mx-0 px-0" >
         <section class="row justify-content-between">
+<!--            Left Side menu-->
             <nav class="col-2 flex-column">
                 <a class="nav-link active" href="#" style="background-color: #007bff; color: white;">Admin</a>
                 <a class="nav-link" href="/user">User</a>
             </nav>
 
+<!--            Right Side menu-->
             <div class="col-10">
                 <h1>Admin panel</h1>
+
+<!--                UnList for tab panel-->
                 <ul class="nav nav-tabs">
                     <li class="nav-item" role="presentation">
                             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#users" role="tab"
                            aria-controls="home" aria-selected="true">Users table</a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="create-tab" data-toggle="tab" href="#new_user" role="tab"
+                        <a class="nav-link" id="create-tab" data-toggle="tab" href="#new-user" role="tab"
                            aria-controls="create" aria-selected="false">New user</a>
                     </li>
                 </ul>
 
+<!--                Tab panel common / tab panels block-->
                 <div class="tab-content" id="myTabContent">
+<!--                    Tab panel for users table-->
                     <div class="tab-pane fade show active card" id="users" role="tabpanel" aria-labelledby="home-tab">
                         <h4 class="bg-light card-header">All users</h4>
                         <div class="container-fluid">
@@ -58,12 +67,80 @@
                                 <tr th:each="user : ${users}">
                                     <td th:text="${user.getFirstName()}"></td>
                                     <td th:text="${user.getEmail()}"></td>
-                                    <td th:text="${user.getStringRoles()}">
-<!--                                        <span th:text="${role.getName().substring(5)}"></span>-->
-                                    </td>
+                                    <td th:text="${user.getStringRoles()}"></td>
                                     <td>
-                                        <a class="btn btn-info btn-sm" role="button"
-                                           th:href="@{/admin/users/{id}/edit/(id=${user.getId()})}">Edit</a>
+                                        <!-- Button trigger modal edit -->
+                                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                                                th:data-target="'#edit-user' + ${user.id}">
+                                            Edit
+                                        </button>
+
+                                        <!-- Modal edit-->
+                                        <div class="modal" th:id="'edit-user' + ${user.id}" tabindex="-1" role="dialog"
+                                             aria-labelledby="edit-userLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Edit user</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+<!--                                                    Form for edit user-->
+                                                    <div class="modal-body">
+                                                        <div class="container-fluid col-7">
+                                                            <form th:method="POST" th:action="@{/admin/users/{id}/edit(id=${user.getId()})}"
+
+                                                                  autocomplete="on"
+                                                                  class="text-center" id="edit-form">
+                                                                <div class="mb-3">
+                                                                    <label for="editFirstName"><strong>First Name</strong></label>
+                                                                    <input autocomplete="on" class="form-control" type="text"
+                                                                           th:value="${user.firstName}"
+                                                                           id="editFirstName"
+                                                                           placeholder="Enter First Name">
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="editEmail"><strong>Email</strong></label>
+                                                                    <input autocomplete="on" class="form-control" type="email"
+                                                                           th:value="${user.email}" id="editEmail"
+                                                                           placeholder="Enter Email">
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="lastName"><strong>Password</strong></label>
+                                                                    <input autocomplete="on" class="form-control" type="password"
+                                                                           th:value="${user.password}" id="lastName"
+                                                                           placeholder="Enter Password">
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="edit-roles">Role</label>
+                                                                    <select class="form-control" name="roles"
+                                                                            id="edit-roles" multiple size="2"
+                                                                            th:value="user.roles">
+                                                                        <option th:each="role : ${roles}" th:value="${role.getId()}"
+                                                                                th:text="${role.toString()}">role
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <button form="edit-form" type="submit" class="btn btn-primary">
+                                                            Edit</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+<!--                                        <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_user"-->
+<!--                                           role="button"-->
+<!--                                           th:href="@{/admin/users/{id}/edit/(id=${user.getId()})}">Edit-->
+<!--                                        </a>-->
                                     </td>
                                     <td>
                                         <a class="btn btn-danger btn-sm" role="button"
@@ -74,12 +151,13 @@
                         </div>
                     </div>
 
-                    <div class="tab-pane fade card" id="new_user" role="tabpanel" aria-labelledby="create-tab">
+<!--                    Tab panel for add new user-->
+                    <div class="tab-pane fade card" id="new-user" role="tabpanel" aria-labelledby="create-tab">
                         <h4 class="bg-light card-header">Add new user</h4>
                         <div class="container-fluid card-body d-flex justify-content-center">
                             <form th:method="POST" th:action="@{/admin/users/create}" th:object="${new_user}"
-                                  class="text-center">
-                                <div class="mb-3 ">
+                                  class="text-center col-4">
+                                <div class="mb-3">
                                     <label for="firstName"><strong>First Name</strong></label>
                                     <input class="form-control" type="text" th:field="*{firstName}"
                                            id="firstName"

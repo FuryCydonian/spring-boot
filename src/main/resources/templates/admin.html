@@ -14,13 +14,13 @@
 <!--    Header-->
     <header class="container-fluid bg-dark">
         <nav class="d-flex justify-content-between text-white navbar mb-2" >
-            <div class="p-2">
+            <div class="">
                 <strong th:text="${auth_user.getEmail()}"></strong>
                 <span class=""> with roles: </span>
                 <span th:text="${auth_user.getStringRoles()}">
                 </span>
             </div>
-            <a class="p-2 text-secondary" th:href="@{/logout}" th:method="GET">Logout</a>
+            <a class="p-2 text-secondary nav-link" th:href="@{/logout}">Logout</a>
         </nav>
     </header>
 <!--    <th:block th:insert="fragments/common.html :: header"></th:block>-->
@@ -109,19 +109,20 @@
                                                                 </div>
 
                                                                 <div class="mb-3">
-                                                                    <label for="lastName"><strong>Password</strong></label>
-                                                                    <input autocomplete="on" class="form-control" type="password"
-                                                                           th:value="${user.password}" id="lastName"
+                                                                    <label for="edit-password"><strong>Password</strong></label>
+                                                                    <input required class="form-control" type="password"
+                                                                           th:value="${user.password}" id="edit-password"
                                                                            placeholder="Enter Password">
                                                                 </div>
 
                                                                 <div class="mb-3">
-                                                                    <label for="edit-roles">Role</label>
+                                                                    <label for="edit-roles"><strong>Role</strong></label>
                                                                     <select class="form-control" name="roles"
                                                                             id="edit-roles" multiple size="2"
                                                                             th:value="user.roles">
                                                                         <option th:each="role : ${roles}" th:value="${role.getId()}"
-                                                                                th:text="${role.toString()}">role
+                                                                                th:text="${role.toString()}"
+                                                                                th:selected="${#lists.contains(user.roles, role)}">role
                                                                         </option>
                                                                     </select>
                                                                 </div>

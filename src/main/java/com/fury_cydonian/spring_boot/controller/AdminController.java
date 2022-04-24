@@ -72,17 +72,16 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/users/{id}/edit")
-    public String updateUserForm(@PathVariable("id") long id, Model model) {
-        User user = userService.getUserById(id);
-        model.addAttribute("roles", roleService.getRoles());
-//        model.addAttribute("user", user);
-        return "edit";
-    }
+//    @GetMapping("/users/{id}/edit")
+//    public String updateUserForm(@PathVariable("id") long id, Model model) {
+//        User user = userService.getUserById(id);
+//        model.addAttribute("roles", roleService.getRoles());
+////        model.addAttribute("user", user);
+//        return "edit";
+//    }
 
     @PostMapping("/users/{id}/edit")
-    public String updateUser(@PathVariable("id") long id, @ModelAttribute("user") User user, @RequestParam("roles") Long[] roles,
-                             @AuthenticationPrincipal User authUser) {
+    public String updateUser(@PathVariable("id") long id, @ModelAttribute("user") User user, @RequestParam("roles") Long[] roles) {
         Set<Role> roleSet = Arrays.stream(roles).map(roleService::getRoleById).collect(Collectors.toSet());
         user.setRoles(roleSet);
         userService.saveUser(user);

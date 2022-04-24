@@ -71,7 +71,8 @@
                                     <td>
                                         <!-- Button trigger modal edit -->
                                         <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
-                                                th:data-target="'#edit-user' + ${user.id}">
+                                                th:data-target="'#edit-user' + ${user.id} + ''"
+                                                th:data-object-name="'' + ${user}">
                                             Edit
                                         </button>
 
@@ -110,8 +111,9 @@
 
                                                                 <div class="mb-3">
                                                                     <label for="edit-password"><strong>Password</strong></label>
-                                                                    <input required class="form-control" type="password"
-                                                                           th:value="${user.password}" id="edit-password"
+                                                                    <input required class="form-control" type="text"
+                                                                           th:value="${user.password}"
+                                                                           id="edit-password"
                                                                            placeholder="Enter Password">
                                                                 </div>
 

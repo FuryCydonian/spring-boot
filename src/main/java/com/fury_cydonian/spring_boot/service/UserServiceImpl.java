@@ -47,6 +47,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void saveUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        System.out.println("PASSWORD : " + user.getPassword());
         userRepository.saveAndFlush(user);
     }
 

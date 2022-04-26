@@ -1,16 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Logout</title>
-
-
-</head>
-<body>
     <div th:fragment="logout">
-        <form th:action="@{/logout}">
-            <input type="submit" value="Logout"/>
+        <form class="container" th:action="@{/logout}" method="post">
+            <input class="btn btn-danger btn-lg" type="submit" value="Logout"/>
         </form>
     </div>
+</head>
+<body>
+
 </body>
 </html>

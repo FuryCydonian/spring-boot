@@ -3,23 +3,16 @@ package com.fury_cydonian.spring_boot.controller;
 import com.fury_cydonian.spring_boot.model.Role;
 import com.fury_cydonian.spring_boot.model.User;
 import com.fury_cydonian.spring_boot.service.RoleService;
-import com.fury_cydonian.spring_boot.service.RoleServiceImpl;
 import com.fury_cydonian.spring_boot.service.UserService;
-import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.relation.RoleNotFoundException;
-import java.security.Principal;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/admin")
@@ -45,6 +38,7 @@ public class AdminController {
         List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);
         model.addAttribute("roles", roleService.getRoles());
+        model.addAttribute("auth_roles", authUser.getRoles());
         model.addAttribute("new_user", new User());
         return "admin";
     }

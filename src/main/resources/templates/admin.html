@@ -80,13 +80,13 @@
                                         <th:block th:each="role : ${user.getRoles()}" th:text="${role.toString()} + ' '">role</th:block>
                                     </td>
                                     <td>
-                                        <!-- Button trigger modal edit -->
+                                        <!-- Button trigger modal EDIT -->
                                         <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
                                                 th:attr="data-target='#edit-user' + ${user.id} + '', data='' + ${user}">
                                             Edit
                                         </button>
 
-                                        <!-- Modal edit-->
+                                        <!-- Modal EDIT-->
                                         <div class="modal" th:id="'edit-user' + ${user.id}" tabindex="-1" role="dialog"
                                              aria-labelledby="edit-userLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
@@ -123,18 +123,18 @@
                                                                 </div>
 
                                                                 <div class="mb-3">
-                                                                    <label for="edit-password"><strong>Password</strong></label>
+                                                                    <label for="editPassword"><strong>Password</strong></label>
                                                                     <input required class="form-control" type="password"
 
 
-                                                                           id="edit-password"
+                                                                           id="editPassword"
                                                                            placeholder="Enter Password">
                                                                 </div>
 
                                                                 <div class="mb-3">
-                                                                    <label for="edit-roles"><strong>Role</strong></label>
+                                                                    <label for="editRoles"><strong>Role</strong></label>
                                                                     <select class="form-control" name="roles"
-                                                                            id="edit-roles" multiple size="2"
+                                                                            id="editRoles" multiple size="2"
                                                                             th:value="${roles}"
                                                                             >
                                                                         <option th:each="role : ${roles}"
@@ -162,8 +162,68 @@
 <!--                                        </a>-->
                                     </td>
                                     <td>
-                                        <a class="btn btn-danger btn-sm" role="button"
-                                           th:href="@{/admin/users/{id}/delete(id=${user.getId()})}">Delete</a>
+                                        <!-- Button trigger modal DELETE -->
+                                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                                th:attr="data-target='#delete-user' + ${user.id} + '', data='' + ${user}">
+                                            Delete
+                                        </button>
+
+                                        <!-- Modal delete-->
+                                        <div class="modal" th:id="'delete-user' + ${user.id}" tabindex="-1" role="dialog"
+                                             aria-labelledby="delete-userLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="delete-userLabel">Delete user</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <!-- Form for delete user-->
+                                                    <div class="modal-body">
+                                                        <div class="container-fluid col-7">
+                                                            <form class="text-center" id="formDelete">
+                                                                <div class="mb-3">
+                                                                    <label for="deleteFirstName"><strong>First Name</strong></label>
+                                                                    <input autocomplete="on" class="form-control" type="text"
+                                                                           th:value="${user.firstName}"
+
+                                                                           id="deleteFirstName"
+                                                                           placeholder="Enter First Name">
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="deleteEmail"><strong>Email</strong></label>
+                                                                    <input autocomplete="on" class="form-control" type="email"
+                                                                           th:value="${user.email}"
+
+                                                                           id="deleteEmail"
+                                                                           placeholder="Enter Email">
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="deleteRoles"><strong>Role</strong></label>
+                                                                    <select class="form-control" name="roles"
+                                                                            id="deleteRoles" multiple size="2"
+                                                                            th:value="${roles}">
+                                                                        <option th:each="role : ${roles}"
+                                                                                th:value="${role.getId()}"
+                                                                                th:text="${role.toString()}"
+                                                                                th:selected="${#lists.contains(user.roles, role)}">role
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <a class="btn btn-danger btn-sm" role="button"
+                                                           th:href="@{/admin/users/{id}/delete(id=${user.getId()})}">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             </table>

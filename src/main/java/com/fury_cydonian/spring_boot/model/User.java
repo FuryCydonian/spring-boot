@@ -75,11 +75,8 @@ public class User implements UserDetails {
         return roles;
     }
 
-    public String getStringRoles() {
-//        String string = getRoles().stream().map(r -> r.toString()).collect(Collectors.toSet()).toString();
-//        String string = roles.toString();
-        return roles.toString().substring(1, roles.toString().lastIndexOf(']'));
-//        return newString;
+    public Set<String> getSetStringRoles() {
+        return getRoles().stream().map(r -> r.toString()).collect(Collectors.toSet());
     }
 
     public void setRoles(Set<Role> roles) {

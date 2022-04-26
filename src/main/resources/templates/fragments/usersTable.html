@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="usersTable">
+    <table class="table table-striped card-body mt-3">
+        <tr>
+            <th>ID</th>
+            <th>name</th>
+            <th>email</th>
+            <th>Roles</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.getId()}"></td>
+            <td th:text="${user.getFirstName()}"></td>
+            <td th:text="${user.getEmail()}"></td>
+            <td>
+                <th:block th:each="role : ${user.getRoles()}" th:text="${role.toString()} + ' '">role</th:block>
+            </td>
+            <td>
+                <!-- Button trigger modal edit -->
+                <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                        th:attr="data-target='#edit-user' + ${user.id} + '', data='' + ${user}">
+                    Edit
+                </button>
+
+                <!-- Modal edit-->
+                <div class="modal" th:id="'edit-user' + ${user.id}" tabindex="-1" role="dialog"
+                     aria-labelledby="edit-userLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="edit-userLabel">Edit user</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <!--                                                    Form for edit user-->
+                            <div class="modal-body">
+                                <div class="container-fluid col-7">
+                                    <form th:method="POST" th:action="@{/admin/users/{id}/edit(id=${user.getId()})}"
+                                          th:href="@{/admin/users/{id}/edit(id=${user.getId()})}"
+                                          th:object="${user}"
+                                          class="text-center" id="formEdit">
+                                        <div class="mb-3">
+                                            <label for="editFirstName"><strong>First Name</strong></label>
+                                            <input autocomplete="on" class="form-control" type="text"
+                                                   th:value="${user.firstName}"
+
+                                                   id="editFirstName"
+                                                   placeholder="Enter First Name">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="editEmail"><strong>Email</strong></label>
+                                            <input autocomplete="on" class="form-control" type="email"
+                                                   th:value="${user.email}"
+
+                                                   id="editEmail"
+                                                   placeholder="Enter Email">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="edit-password"><strong>Password</strong></label>
+                                            <input required class="form-control" type="password"
+                                                   th:value="${user.password}"
+
+                                                   id="edit-password"
+                                                   placeholder="Enter Password">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="edit-roles"><strong>Role</strong></label>
+                                            <select class="form-control" name="roles"
+                                                    id="edit-roles" multiple size="2"
+                                                    th:value="${roles}"
+                                            >
+                                                <option th:each="role : ${roles}"
+                                                        th:value="${role.getId()}"
+                                                        th:text="${role.toString()}"
+                                                        th:selected="${#lists.contains(user.roles, role)}">role
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button form="formEdit" type="submit" class="btn btn-primary">
+                                    Edit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--                                        <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_user"-->
+                <!--                                           role="button"-->
+                <!--                                           th:href="@{/admin/users/{id}/edit/(id=${user.getId()})}">Edit-->
+                <!--                                        </a>-->
+            </td>
+            <td>
+                <a class="btn btn-danger btn-sm" role="button"
+                   th:href="@{/admin/users/{id}/delete(id=${user.getId()})}">Delete</a>
+            </td>
+        </tr>
+    </table>
+</th:block>
+
+</html>

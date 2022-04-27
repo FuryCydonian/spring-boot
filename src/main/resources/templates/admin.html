@@ -82,12 +82,12 @@
                                     <td>
                                         <!-- Button trigger modal EDIT -->
                                         <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
-                                                th:attr="data-target='#edit-user' + ${user.id} + '', data='' + ${user}">
+                                                th:attr="data-target='#edit-user' + ${user.id} + '', data-object-name='' + ${user}">
                                             Edit
                                         </button>
 
                                         <!-- Modal EDIT-->
-                                        <div class="modal" th:id="'edit-user' + ${user.id}" tabindex="-1" role="dialog"
+                                        <div class="modal edit-user-modal" th:id="'edit-user' + ${user.id}" tabindex="-1" role="dialog"
                                              aria-labelledby="edit-userLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
@@ -103,40 +103,44 @@
                                                             <form th:method="POST" th:action="@{/admin/users/{id}/edit(id=${user.getId()})}"
                                                                   th:href="@{/admin/users/{id}/edit(id=${user.getId()})}"
                                                                   th:object="${user}"
-                                                                  class="text-center" id="formEdit">
+                                                                  class="text-center"
+                                                                  th:id="'formEdit' + ${user.id}">
                                                                 <div class="mb-3">
-                                                                    <label for="editFirstName"><strong>First Name</strong></label>
-                                                                    <input autocomplete="on" class="form-control" type="text"
-                                                                           th:value="${user.firstName}"
-
-                                                                           id="editFirstName"
+                                                                    <label th:for="'editID' + ${user.id}"><strong>ID</strong></label>
+                                                                    <input autocomplete="on" disabled class="form-control editUserID" type="text"
+                                                                           th:value="${user.id}"
+                                                                           th:id="'editID' + ${user.id}"
                                                                            placeholder="Enter First Name">
                                                                 </div>
 
                                                                 <div class="mb-3">
-                                                                    <label for="editEmail"><strong>Email</strong></label>
+                                                                    <label th:for="'editFirstName' + ${user.id}"><strong>First Name</strong></label>
+                                                                    <input autocomplete="on" class="form-control" type="text"
+                                                                           th:value="${user.firstName}"
+                                                                           th:id="'editFirstName' + ${user.id}"
+                                                                           placeholder="Enter First Name">
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label th:for="editEmail"><strong>Email</strong></label>
                                                                     <input autocomplete="on" class="form-control" type="email"
                                                                            th:value="${user.email}"
-
-                                                                           id="editEmail"
+                                                                           th:id="'editEmail' + ${user.id}"
                                                                            placeholder="Enter Email">
                                                                 </div>
 
                                                                 <div class="mb-3">
-                                                                    <label for="editPassword"><strong>Password</strong></label>
+                                                                    <label th:for="'editPassword' + ${user.id}"><strong>Password</strong></label>
                                                                     <input required class="form-control" type="password"
-
-
-                                                                           id="editPassword"
+                                                                           th:id="'editPassword' + ${user.id}"
                                                                            placeholder="Enter Password">
                                                                 </div>
 
                                                                 <div class="mb-3">
-                                                                    <label for="editRoles"><strong>Role</strong></label>
+                                                                    <label th:for="'editRoles' + ${user.id}"><strong>Role</strong></label>
                                                                     <select class="form-control" name="roles"
-                                                                            id="editRoles" multiple size="2"
-                                                                            th:value="${roles}"
-                                                                            >
+                                                                            th:id="'editRoles' + ${user.id}" multiple size="2"
+                                                                            th:value="${roles}">
                                                                         <option th:each="role : ${roles}"
                                                                                 th:value="${role.getId()}"
                                                                                 th:text="${role.toString()}"
@@ -149,17 +153,12 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <button form="formEdit" type="submit" class="btn btn-primary">
+                                                        <button th:form="'formEdit' + ${user.id}" type="submit" class="btn btn-primary" >
                                                             Edit</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
-<!--                                        <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_user"-->
-<!--                                           role="button"-->
-<!--                                           th:href="@{/admin/users/{id}/edit/(id=${user.getId()})}">Edit-->
-<!--                                        </a>-->
                                     </td>
                                     <td>
                                         <!-- Button trigger modal DELETE -->
@@ -292,8 +291,9 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="/js/forAdminPage.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="./js/forAdminPage.js"></script>
+
 </body>
 </html>

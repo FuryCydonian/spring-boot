@@ -1,0 +1,45 @@
+package com.fury_cydonian.spring_boot.controller;
+
+import com.fury_cydonian.spring_boot.model.Role;
+import com.fury_cydonian.spring_boot.model.User;
+import com.fury_cydonian.spring_boot.service.RoleService;
+import com.fury_cydonian.spring_boot.service.UserService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Set;
+
+@Controller
+public class TestController {
+
+    private final UserService userService;
+    private final RoleService roleService;
+
+    public TestController(UserService userService, RoleService roleService) {
+        this.userService = userService;
+        this.roleService = roleService;
+    }
+
+    @GetMapping("/test")
+    public String testPage(Model model) {
+        List<User> allUsers = userService.getAllUsers();
+        Set<Role> allRoles = roleService.getRoles();
+        model.addAttribute("allUsers", allUsers);
+        model.addAttribute("allRoles", allRoles);
+        return "test";
+    }
+
+    @PostMapping("/test/create")
+    public String saveUser(@ModelAttribute("user") User user) {
+        userService.saveUser(user);
+        return "redirect:/test";
+    }
+
+    @GetMapping("/findUser")
+    @ResponseBody
+    public User findUser(long id) {
+        return userService.getUserById(id);
+    }
+}

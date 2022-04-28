@@ -7,7 +7,7 @@ $(document).ready(function () {
     $('#eBtn').on('click', function (e) {
         e.preventDefault();
 
-        $('#edit-user-modal').modal('show');
+        $('#edit-user-modal').modal();
     });
 });
 

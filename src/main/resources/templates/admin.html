@@ -4,11 +4,11 @@
 <!--    <th:block th:insert="fragments/common :: styles"></th:block>-->
 <!--    BS 4-->
 
-    <script type="text/javascript" src="webjars/jquery/3.3.1/jquery.min.js"></script>
-    <script type="text/javascript" src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="webjars/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="webjars/bootstrap/4.6.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" th:src="@{js/forAdminPage.js}" src="../static/js/forAdminPage.js"></script>
 
-    <link rel="stylesheet" href="webjars/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="webjars/bootstrap/4.6.1/css/bootstrap.min.css">
     <meta charset="UTF-8">
 <!--    <th:block th:insert="fragments/common.html :: meta"></th:block>-->
     <title>Admin page</title>
@@ -209,7 +209,8 @@
                                                             <option th:each="role : ${roles}"
                                                                     th:value="${role.getId()}"
                                                                     th:text="${role.toString()}"
-                                                                    th:selected="${#lists.contains(roles, role)}">role
+                                                                    th:selected="${#lists.contains(roles, role)}">
+                                                                role
                                                             </option>
                                                         </select>
                                                     </div>

@@ -1,5 +1,6 @@
 package com.fury_cydonian.spring_boot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;

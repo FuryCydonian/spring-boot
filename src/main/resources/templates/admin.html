@@ -82,7 +82,7 @@
                                     <td>
                                         <!-- Button trigger modal EDIT -->
                                         <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
-                                                th:attr="data-target='#edit-user' + ${user.id} + '', data-object-name='' + ${user}">
+                                                th:attr="data-target='#edit-user' + ${user.id}, data-object=${user}">
                                             Edit
                                         </button>
 

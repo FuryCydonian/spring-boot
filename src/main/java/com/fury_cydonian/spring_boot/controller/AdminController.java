@@ -50,13 +50,13 @@ public class AdminController {
         return "users";
     }
 
-//    @GetMapping("/users/create")
-//    public String createUserForm(Model model) {
-//        User user = new User();
-//        model.addAttribute("roles", roleService.getRoles());
-//        model.addAttribute("user", user);
-//        return "create";
-//    }
+    @GetMapping("/users/create")
+    public String createUserForm(Model model) {
+        User user = new User();
+        model.addAttribute("roles", roleService.getRoles());
+        model.addAttribute("user", user);
+        return "create";
+    }
 
     @PostMapping("/users/create")
     public String createUser(@ModelAttribute("user") User user, @RequestParam("roles") Long[] roles) {

@@ -34,11 +34,27 @@ public class AdminRestController {
         return userService.getUserById(id);
     }
 
-    @PostMapping("/users/{id}/edit")
+    @PutMapping("/users/{id}")
     public HttpStatus updateUser(@PathVariable("id") long id, @ModelAttribute("user") User user, @RequestParam("roles") Long[] roles) {
         Set<Role> roleSet = Arrays.stream(roles).map(roleService::getRoleById).collect(Collectors.toSet());
         user.setRoles(roleSet);
-        userService.saveUser(user);
+        try {
+            userService.saveUser(user);
+        } catch (Exception e) {
+            return HttpStatus.BAD_REQUEST;
+        }
+        return HttpStatus.OK;
+    }
+
+    @PostMapping("/users")
+    public HttpStatus saveUser(@RequestBody User user, @RequestParam("roles") Long[] roles) {
+        Set<Role> roleSet = Arrays.stream(roles).map(roleService::getRoleById).collect(Collectors.toSet());
+        user.setRoles(roleSet);
+        try {
+            userService.saveUser(user);
+        } catch (Exception e) {
+            return HttpStatus.BAD_REQUEST;
+        }
         return HttpStatus.OK;
     }
 }

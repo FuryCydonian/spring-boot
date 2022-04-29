@@ -1,21 +1,65 @@
-$(document).ready(function (){
+$(async function() {
+    console.log('test.js file')
+    await getTableWithUsers()
+})
 
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!');
-    $('#eBtn').click(function(e) {
-        e.preventDefault();
-        var href = $(this).attr('href');
+const userFetchService = {
+    head: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Referer': null
+    },
+    findAllUsers: async () => await fetch('api/users'),
+    findOneUser: async (id) => await fetch(`api/users/${id}`),
+    addNewUser: async (user) => await fetch('api/users', {
+        method: 'POST',
+        headers: userFetchService.head,
+        body: JSON.stringify(user)}
+    ),
+    updateUser: async (user, id) => await fetch(`api/users/${id}`, {
+        method: 'PUT',
+        headers: userFetchService.head,
+        body: JSON.stringify(user)}
+    ),
+    deleteUser: async (id) => await fetch(`api/users/${id}`, {
+        method: 'DELETE',
+        headers: userFetchService.head}
+    )
+}
 
-        $.get(href, function(user, status) {
-            $('.myForm #editId').val(user.id);
-            $('.myForm #editFirstName').val(user.firstName);
-            $('.myForm #editEmail').val(user.email);
-            $('.myForm #editPassword').val(user.password);
-            $('.myForm #editRoles').val(user.roles);
+const getTableWithUsers = async() => {
+    let table = $('#mainTableWithUsers tbody')
+    table.empty()
 
-        });
+    let usersJson = (await userFetchService.findAllUsers()).json()
+    usersJson.then(users => {
+        console.log(users)
+        users.forEach(user => {
+            let userRoles = ``
+            for(let role of user.roles) {
+                userRoles += role.name.replace("ROLE_", "") + ', '
+            }
+            let tableRow = `$(
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.firstName}</td>
+                    <td>${user.email}</td>
+                    <td>${userRoles.slice(0, -2)}</td>
+                    <td>
+                        <button type="button" data-userid="${user.id}" data-action="edit" class="btn btn-info btn-sm" 
+                                data-toggle="modal" data-target="#someDefaultModal"></button>
+                    </td>
+                    <td>
+                        <button type="button" data-userid="${user.id}" data-action="delete" class="btn btn-danger btn-sm" 
+                                data-toggle="modal" data-target="#someDefaultModal"></button>
+                    </td>
+                </tr>
+            )`
+            table.append(tableRow)
 
-        $('#editUserModal').modal('show');
+        })
+    })
 
-    });
 
-});
+}
+

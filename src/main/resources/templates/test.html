@@ -11,101 +11,57 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
-    <script th:src="@{js/test.js}" src="../static/js/test.js"></script>
-
     <meta charset="UTF-8">
     <title>Test</title>
 </head>
 <body>
 
-    <div class="container-fluid">
-        <div class="tab-pane fade show active card" id="users" role="tabpanel" aria-labelledby="home-tab">
-            <table class="table table-striped card-body mt-3">
+<div class="container-fluid">
+
+    <!--таблица юзеров-->
+    <div class="d-flex justify-content-center">
+        <div>
+            <table class="table table-striped" id="mainTableWithUsers">
+<!--                Table head-->
                 <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>First Name</th>
-                        <th>Email</th>
-                        <th>Roles</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <tr th:each="user : ${allUsers}">
-                    <td th:text="${user.id}"></td>
-                    <td th:text="${user.firstName}"></td>
-                    <td th:text="${user.email}"></td>
-                    <td>
-                        <th:block th:each="role : ${user.getRoles()}" th:text="${role.toString()} + ' '">role</th:block>
-                    </td>
-                    <!-- Modal open button-->
-                    <td><a th:href="@{/findUser/(id=${user.id})}" class="btn btn-primary" id="eBtn" data-toggle="modal" data-target="#editUserModal">Edit</a></td>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
                 </tr>
+                </thead>
+<!--                table body-->
+                <tbody>
                 </tbody>
             </table>
         </div>
-
-        <!-- Модальное окно -->
-        <div class="myFormmyForm">
-            <form th:action="@{/test/create}" method="post">
-                <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel"
-                     aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label for="editId">ID</label>
-                                    <input type="text" class="form-control" id="editId" aria-describedby="idHelp" value="">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="editFirstName">First Name</label>
-                                    <input required type="text" class="form-control" id="editFirstName"
-                                           aria-describedby="firstNameHelp value=">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="editEmail">Email</label>
-                                    <input required type="text" class="form-control" id="editEmail"
-                                           aria-describedby="emailHelp" value="">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="editPassword">Password</label>
-                                    <input required type="password" class="form-control" id="editPassword" value="">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="editRoles">Role</label>
-                                    <select required type="text" class="form-control" id="editRoles" name="editRoles"
-                                    multiple size="2" th:value="${allRoles}">
-                                        <option th:each="role : ${allRoles}"
-                                            th:value="${role.id}"
-                                            th:text="${role.toString()}"
-                                            th:selected="${#lists.contains(allRoles, role)}">
-                                        </option>
-                                    </select>
-                                </div>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Edit</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
     </div>
+</div>
+
+<!--форма заполнения нового юзера и две кнопки-->
+<div class="container-fluid">
+    <div class="d-flex justify-content-center">
+
+        <div class="form-group align-items-center">
+            <form id="defaultSomeForm" data-hidden=true style="display: none">
+                <input class="form-control" id="AddNewUserLogin" type="text" placeholder="email"><br>
+                <input class="form-control" id="AddNewUserPassword" type="password" placeholder="password"><br>
+                <input class="form-control" id="AddNewUserAge" type="number" placeholder="age"><br>
+                <button class="btn btn-primary mb-2" type="button" id="addNewUserButton">Add new user</button>
+            </form>
+            <div class="p-2">
+                <button class="btn btn-outline-success" id="SliderNewUserForm">Show panel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+    <script th:src="@{js/test.js}"></script>
 
 </body>
 </html>

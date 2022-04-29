@@ -14,8 +14,7 @@ $(document).ready(function (){
 
         });
 
-        concole.log
-        // $('#editUserModal').modal('show');
+        $('#editUserModal').modal('show');
 
     });
 

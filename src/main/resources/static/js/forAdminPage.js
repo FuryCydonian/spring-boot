@@ -1,54 +1,73 @@
 // import * as service from './static/js/fetchService';
 
-$(document).ready(function () {
+$(function () {
 
     console.log('HELLO FROM JS FILE!!!!!!!!!!!!!!!!!!!!!')
 
-    $('#eBtn').on('click', function (e) {
-        e.preventDefault();
-
-        $('#edit-user-modal').modal();
-    });
+    editModal()
 });
 
+const userFetchService = {
+    head: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Referer': null
+    },
+    findAllUsers: async () => await fetch('api/users'),
+    findOneUserById: async (id) => await fetch(`api/users/${id}`),
+    addNewUser: async (user) => await fetch('api/users', {
+        method: 'POST',
+        headers: userFetchService.head,
+        body: JSON.stringify(user)
+    }),
+    updateUser: async (user, id) => await fetch(`api/users/${id}`, {
+        method: 'PUT',
+        headers: userFetchService.head,
+        body: JSON.stringify(user)
+    }),
+    deleteUser: async (id) => await fetch(`api/users/${id}`, {
+        method: 'DELETE',
+        headers: userFetchService.head
+    }),
+    findAllRoles: async () => await fetch('api/roles'),
+}
 
+const editModal = () => {
+    $('edit-user-modal').modal({
+        show: false
+    }).on('show.bs.modal', (e) => {
+        let button = $(e.relatedTarget)
+        let id = button.data('userId')
+        editUser($(this), id)
+    })
+}
 
-// let editModal = $('.edit-user-modal');
-// let editUserID = $('.editUserID').attr('value');
-// let editURL = `/admin/users/${editUserID}/edit`;
-// let formEdit = $('#formEdit' + editUserID);
+const editUser = (modal, id) => {
+    modal.find('#editFormBtn').on('click', async (event) => {
+        let id = modal.find('#editID').val().trim()
+        let firstName = modal.find('#editFirstName').val().trim()
+        let email = modal.find('#editEmail').val().trim()
+        let password = modal.find('#editPassword').val().trim()
 
-// service.findUserByID(editUserID)
+        let rolesFromForm = modal.find('#editRoles').val().trim()
 
-// function editUser(id, url) {
-//     formEdit.submit(async (e) => {
-//         e.preventDefault();
-//         let response = await fetch(url, {
-//             method: 'POST',
-//             body: new FormData(formEdit)
-//         });
-//
-//         let result = await response.json();
-//
-//         alert(result.message);
-//     });
-// }
+        // let userRoles = []
 
-// async function sendData(id) {
-//
-// }
+        let data = {
+            id: id,
+            firstName: firstName,
+            email: email,
+            password: email,
+            roles: rolesFromForm
+        }
 
+        console.log(data)
 
-// formEdit.onsubmit = async (e) => {
-//     e.preventDefault();
-//     let editURL = this.attr('action')
-//
-//     let response = await fetch(editURL, {
-//         method: 'POST',
-//         body: new FormData(formEdit)
-//     });
-//
-//     let result = await response.json();
-//
-//     alert(result.message);
-// };
+        let response = await userFetchService.updateUser(data.id)
+        if (response.ok) {
+            alert(`${email} successfully updated`)
+            modal.modal('hide')
+        }
+        alert(`response status: ${response.status}, /n ${response.body}`)
+    })
+}

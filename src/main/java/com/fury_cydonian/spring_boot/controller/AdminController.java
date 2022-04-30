@@ -34,11 +34,8 @@ public class AdminController {
     @GetMapping()
     public String successAdmin(@AuthenticationPrincipal User authUser, Model model) {
         model.addAttribute("auth_user", authUser);
-        model.addAttribute("rolesAuthUser", authUser.getRoles());
-        List<User> users = userService.getAllUsers();
-        model.addAttribute("users", users);
+        model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("roles", roleService.getRoles());
-        model.addAttribute("auth_roles", authUser.getRoles());
         model.addAttribute("new_user", new User());
         return "admin";
     }
@@ -76,7 +73,6 @@ public class AdminController {
 
     @PostMapping("/users/{id}/edit")
     public String updateUser(@PathVariable("id") long id, @ModelAttribute("user") User user, @RequestParam("roles") Long[] roles) {
-        User prevUser = userService.getUserById(id);
         Set<Role> roleSet = Arrays.stream(roles).map(roleService::getRoleById).collect(Collectors.toSet());
         user.setRoles(roleSet);
         userService.saveUser(user);

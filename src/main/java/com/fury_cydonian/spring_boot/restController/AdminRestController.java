@@ -71,4 +71,9 @@ public class AdminRestController {
         }
         return HttpStatus.OK;
     }
+
+    @GetMapping("/roles")
+    public Set<Role> getAllRoles() {
+        return roleService.getRoles();
+    }
 }

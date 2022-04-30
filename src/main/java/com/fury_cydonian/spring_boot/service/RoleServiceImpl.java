@@ -5,9 +5,8 @@ import com.fury_cydonian.spring_boot.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.management.relation.RoleNotFoundException;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -41,11 +40,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Set<Role> getRoles() {
-        return roleRepository.findAll().stream().collect(Collectors.toSet());
+        return new HashSet<>(roleRepository.findAll());
     }
 
-//    @Override
-//    public Role findByName(String name) {
-//        return roleRepository.findUserByNameRole(name);
-//    }
 }

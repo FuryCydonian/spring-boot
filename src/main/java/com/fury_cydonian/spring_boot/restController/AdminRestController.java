@@ -35,7 +35,7 @@ public class AdminRestController {
     }
 
     @PutMapping("/users/{id}")
-    public HttpStatus updateUser(@PathVariable("id") long id, @ModelAttribute("user") User user
+    public HttpStatus updateUser(@PathVariable("id") long id, @RequestBody User user
 //                                , @RequestParam("roles") Long[] roles
     ) {
 //        Set<Role> roleSet = Arrays.stream(roles).map(roleService::getRoleById).collect(Collectors.toSet());

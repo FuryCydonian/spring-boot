@@ -74,51 +74,44 @@ public class User implements UserDetails {
         return roles;
     }
 
-    public Set<String> getSetStringRoles() {
-        return getRoles().stream().map(r -> r.toString()).collect(Collectors.toSet());
+    public Set<String> getSetOfStringRoles() {
+        return getRoles().stream().map(Role::toString).collect(Collectors.toSet());
     }
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
-    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
     }
 
-    @JsonIgnore
     @Override
     public String getPassword() {
         return password;
     }
 
-    @JsonIgnore
     @Override
     public String getUsername() {
         return email;
     }
 
-    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
-    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
-    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;

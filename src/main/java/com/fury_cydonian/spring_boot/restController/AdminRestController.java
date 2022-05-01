@@ -4,13 +4,12 @@ import com.fury_cydonian.spring_boot.model.Role;
 import com.fury_cydonian.spring_boot.model.User;
 import com.fury_cydonian.spring_boot.service.RoleService;
 import com.fury_cydonian.spring_boot.service.UserService;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -34,42 +33,39 @@ public class AdminRestController {
         return userService.getUserById(id);
     }
 
+    @GetMapping("/user")
+    public User currentUser(@AuthenticationPrincipal User authUser) {
+        return authUser;
+    }
+
     @PutMapping("/users/{id}")
-    public HttpStatus updateUser(@PathVariable("id") long id, @RequestBody User user
-//                                , @RequestParam("roles") Long[] roles
-    ) {
-//        Set<Role> roleSet = Arrays.stream(roles).map(roleService::getRoleById).collect(Collectors.toSet());
-//        user.setRoles(roleSet);
+    public ResponseEntity<String> updateUser(@PathVariable("id") long id, @RequestBody User user) {
         try {
             userService.saveUser(user);
         } catch (Exception e) {
-            return HttpStatus.BAD_REQUEST;
+            return ResponseEntity.badRequest().body("Something went wrong");
         }
-        return HttpStatus.OK;
+        return ResponseEntity.ok("User is updated");
     }
 
     @PostMapping("/users")
-    public HttpStatus saveUser(@RequestBody User user
-//                              , @RequestParam("roles") Long[] roles
-    ) {
-//        Set<Role> roleSet = Arrays.stream(roles).map(roleService::getRoleById).collect(Collectors.toSet());
-//        user.setRoles(roleSet);
+    public ResponseEntity<String> saveUser(@RequestBody User user) {
         try {
             userService.saveUser(user);
         } catch (Exception e) {
-            return HttpStatus.BAD_REQUEST;
+            return ResponseEntity.badRequest().body("Something went wrong");
         }
-        return HttpStatus.OK;
+        return ResponseEntity.ok("User is added");
     }
 
     @DeleteMapping("/users/{id}")
-    public HttpStatus deleteUser(@PathVariable("id") long id) {
+    public ResponseEntity<String> deleteUser(@PathVariable("id") long id) {
         try {
             userService.deleteUser(id);
         } catch (Exception e) {
-            return HttpStatus.BAD_REQUEST;
+            return ResponseEntity.badRequest().body("Something went wrong");
         }
-        return HttpStatus.OK;
+        return ResponseEntity.ok("User is deleted");
     }
 
     @GetMapping("/roles")

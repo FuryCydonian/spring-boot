@@ -36,7 +36,7 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <!--                                                    Form for edit user-->
+                            <!-- Form for edit user-->
                             <div class="modal-body">
                                 <div class="container-fluid col-7">
                                     <form th:method="POST" th:action="@{/admin/users/{id}/edit(id=${user.getId()})}"
@@ -89,7 +89,8 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <button form="formEdit" type="submit" class="btn btn-primary">
-                                    Edit</button>
+                                    Edit
+                                </button>
                             </div>
                         </div>
                     </div>

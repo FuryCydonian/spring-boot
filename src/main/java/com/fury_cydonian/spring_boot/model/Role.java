@@ -1,11 +1,14 @@
 package com.fury_cydonian.spring_boot.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Set;
 
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @Entity
 @Table(name = "roles")
 public class Role implements GrantedAuthority {
@@ -15,12 +18,12 @@ public class Role implements GrantedAuthority {
 
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
+//    @ManyToMany(mappedBy = "roles")
 //    @ManyToMany()
 //    @JoinTable(name = "users_roles",
 //            joinColumns = @JoinColumn(name = "role_id"),
 //            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> users;
+//    private Set<User> users;
 
     public Role(Long id, String name) {
         this.id = id;
@@ -46,13 +49,13 @@ public class Role implements GrantedAuthority {
         this.name = name;
     }
 
-    public Collection<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
+//    public Collection<User> getUsers() {
+//        return users;
+//    }
+//
+//    public void setUsers(Set<User> users) {
+//        this.users = users;
+//    }
 
     @Override
     public String getAuthority() {

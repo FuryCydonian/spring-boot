@@ -34,11 +34,46 @@ public class AdminRestController {
         return userService.getUserById(id);
     }
 
-    @PostMapping("/users/{id}/edit")
-    public HttpStatus updateUser(@PathVariable("id") long id, @ModelAttribute("user") User user, @RequestParam("roles") Long[] roles) {
-        Set<Role> roleSet = Arrays.stream(roles).map(roleService::getRoleById).collect(Collectors.toSet());
-        user.setRoles(roleSet);
-        userService.saveUser(user);
+    @PutMapping("/users/{id}")
+    public HttpStatus updateUser(@PathVariable("id") long id, @RequestBody User user
+//                                , @RequestParam("roles") Long[] roles
+    ) {
+//        Set<Role> roleSet = Arrays.stream(roles).map(roleService::getRoleById).collect(Collectors.toSet());
+//        user.setRoles(roleSet);
+        try {
+            userService.saveUser(user);
+        } catch (Exception e) {
+            return HttpStatus.BAD_REQUEST;
+        }
         return HttpStatus.OK;
+    }
+
+    @PostMapping("/users")
+    public HttpStatus saveUser(@RequestBody User user
+//                              , @RequestParam("roles") Long[] roles
+    ) {
+//        Set<Role> roleSet = Arrays.stream(roles).map(roleService::getRoleById).collect(Collectors.toSet());
+//        user.setRoles(roleSet);
+        try {
+            userService.saveUser(user);
+        } catch (Exception e) {
+            return HttpStatus.BAD_REQUEST;
+        }
+        return HttpStatus.OK;
+    }
+
+    @DeleteMapping("/users/{id}")
+    public HttpStatus deleteUser(@PathVariable("id") long id) {
+        try {
+            userService.deleteUser(id);
+        } catch (Exception e) {
+            return HttpStatus.BAD_REQUEST;
+        }
+        return HttpStatus.OK;
+    }
+
+    @GetMapping("/roles")
+    public Set<Role> getAllRoles() {
+        return roleService.getRoles();
     }
 }

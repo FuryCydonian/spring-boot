@@ -1,19 +1,16 @@
 package com.fury_cydonian.spring_boot.service;
 
-import com.fury_cydonian.spring_boot.model.Role;
 import com.fury_cydonian.spring_boot.model.User;
 import com.fury_cydonian.spring_boot.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.fury_cydonian.spring_boot.service.Test;
 
 import javax.transaction.Transactional;
-import java.beans.Transient;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -31,7 +28,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Long id) {
-        return userRepository.getById(id);
+        return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
     }
 
     public User getUserByEmail(String email) {
@@ -53,15 +50,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() ->
-                new UsernameNotFoundException("User doesn't exist"));
+        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
     }
 
     @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
-    
+
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

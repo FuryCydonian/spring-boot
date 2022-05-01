@@ -17,7 +17,4 @@ public class LoginController {
         model.addAttribute("logout", error != null);
         return "login";
     }
-
-//    @PostMapping
-//    public
 }

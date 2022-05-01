@@ -1,5 +1,6 @@
 package com.fury_cydonian.spring_boot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -27,11 +28,9 @@ public class User implements UserDetails {
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @Column(name = "roles")
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(name = "users_roles",
-//                joinColumns = @JoinColumn(name = "user_id"),
-//                inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "users_roles",
+                joinColumns = @JoinColumn(name = "user_id"),
+                inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
     public User(String firstName, String email, String password) {
@@ -75,8 +74,8 @@ public class User implements UserDetails {
         return roles;
     }
 
-    public Set<String> getSetStringRoles() {
-        return getRoles().stream().map(r -> r.toString()).collect(Collectors.toSet());
+    public Set<String> getSetOfStringRoles() {
+        return getRoles().stream().map(Role::toString).collect(Collectors.toSet());
     }
 
     public void setRoles(Set<Role> roles) {

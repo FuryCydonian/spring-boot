@@ -8,20 +8,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-
 @Controller
 public class UserController {
 
-    private final UserService userService;
-
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
     @GetMapping("/")
-    public String mainPage(Model model) {
+    public String mainPage() {
         return "index";
     }
 

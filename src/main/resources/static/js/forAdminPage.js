@@ -1,7 +1,5 @@
 $(function () {
-
     console.log('HELLO FROM JS FILE!!!!!!!!!!!!!!!!!!!!!')
-
     onClickTableButton()
 });
 
@@ -9,7 +7,6 @@ const userFetchService = {
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        // 'Referer': null
     },
     findAllUsers: async () => await fetch('api/users'),
     findOneUserById: async (id) => await fetch(`api/users/${id}`),

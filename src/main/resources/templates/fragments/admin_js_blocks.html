@@ -1,10 +1,158 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+
+<!--============ EDIT USER MODAL-->
+<th:block th:fragment="editModal">
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog"
+         aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit User</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <!-- Form for edit user-->
+                <div class="modal-body">
+                    <div class="container-fluid col-7">
+                        <form class="text-center" id="formEdit">
+                            <div class="mb-3">
+                                <label for="ID"><strong>ID</strong></label>
+                                <input autocomplete="on" disabled class="form-control" type="text"
+                                       id="ID"
+                                       name="ID">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="firstName"><strong>First Name</strong></label>
+                                <input required autocomplete="on" class="form-control" type="text"
+                                       id="firstName"
+                                       name="firstName"
+                                       placeholder="Enter First Name">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email"><strong>Email</strong></label>
+                                <input required autocomplete="on" class="form-control"
+                                       type="email"
+                                       id="email"
+                                       name="email"
+                                       placeholder="Enter Email">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password"><strong>Password</strong></label>
+                                <input required class="form-control" type="password"
+                                       id="password"
+                                       name="password"
+                                       placeholder="Enter Password">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="roles"><strong>Role</strong></label>
+                                <select required class="form-control" name="roles"
+                                        id="roles"
+                                        multiple size="2">
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button form="formEdit" type="submit"
+                            id="editButtonAccept"
+                            class="btn btn-primary">
+                        Edit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!--============ DELETE USER MODAL-->
+<th:block th:fragment="deleteModal">
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
+         aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete User</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <!-- Form for delete user-->
+                <div class="modal-body">
+                    <div class="container-fluid col-7">
+                        <form class="text-center" id="formDelete">
+                            <div class="mb-3">
+                                <label for="ID"><strong>ID</strong></label>
+                                <input autocomplete="on" disabled class="form-control" type="text"
+                                       id="ID"
+                                       name="ID">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="firstName"><strong>First Name</strong></label>
+                                <input required autocomplete="on" class="form-control" type="text"
+                                       id="firstName"
+                                       name="firstName"
+                                       placeholder="Enter First Name">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email"><strong>Email</strong></label>
+                                <input required autocomplete="on" class="form-control"
+                                       type="email"
+                                       id="email"
+                                       name="email"
+                                       placeholder="Enter Email">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password"><strong>Password</strong></label>
+                                <input required class="form-control" type="password"
+                                       id="password"
+                                       name="password"
+                                       placeholder="Enter Password">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="roles"><strong>Role</strong></label>
+                                <select required class="form-control" name="roles"
+                                        id="roles"
+                                        multiple size="2">
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button form="formDelete" type="submit"
+                            id="deleteButtonAccept"
+                            class="btn btn-danger">
+                        Delete
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</th:block>
 
 </body>
 </html>

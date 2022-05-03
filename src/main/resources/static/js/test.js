@@ -1,6 +1,7 @@
 $(async function () {
     console.log('!!!!!!!!!!!!!!!test.js file')
-    await getTableWithUsers()
+    getTableWithUsers()
+    addNewUser()
     editModal()
 })
 
@@ -60,74 +61,9 @@ const getTableWithUsers = async () => {
             tableBody.append(tableRow)
         })
     })
-
-    console.log('TABLE CREATED')
-
-    // обрабатываем нажатие на любую из кнопок edit или delete
-    // достаем из нее данные и отдаем модалке, которую открываем
-    // $('#mainTableWithUsers').find('button').on('click', (event) => {
-    //     let defaultModal = $('#someDefaultModal');
-    //
-    //     let targetButton = $(event.target);
-    //     alert(targetButton)
-    //
-    //     let buttonUserId = targetButton.attr('data-id');
-    //     console.log(buttonUserId)
-    //     let buttonAction = targetButton.attr('action');
-    //     console.log(buttonAction)
-    //
-    //     defaultModal.attr('data-id', buttonUserId);
-    //     defaultModal.attr('data-action', buttonAction);
-    //     defaultModal.modal('show');
-    // })
 }
 
-// const onClickEditButton = () => {
-//     $('#mainTableWithUsers').find('#editTableButton').on('click', (event) => {
-//         let targetButton = $(event.target);
-//         console.log('target button: ' + targetButton)
-//
-//         let userId = targetButton.data('id')
-//         console.log('user ID: ' + userId)
-//
-//         let action = targetButton.data('action')
-//         console.log('action: ' + action)
-//
-//         if (action === 'edit') {
-//             console.log('IF EDIT!!!!!!!!!!!!!!!')
-//             editUser(userId)
-//         }
-//     })
-// }
-
-// // что то деалем при открытии модалки и при закрытии
-// // основываясь на ее дата атрибутах
-// const getEditModal = async () => {
-//     $('#editModal').modal({
-//         keyboard: true,
-//         backdrop: "static",
-//         show: false
-//     }).on("show.bs.modal", (event) => {
-//         let thisModal = $(event.target);
-//         let userid = thisModal.attr('data-id');
-//         let action = thisModal.attr('data-action');
-//         switch (action) {
-//             case 'edit':
-//                 editUser(thisModal, userid);
-//                 break;
-//             case 'delete':
-//                 // deleteUser(thisModal, userid);
-//                 break;
-//         }
-//     }).on("hidden.bs.modal", (e) => {
-//         let thisModal = $(e.target);
-//         thisModal.find('.modal-title').html('');
-//         thisModal.find('.modal-body').html('');
-//         thisModal.find('.modal-footer').html('');
-//     })
-// }
-
-function editModal() {
+const editModal = () => {
     $('#editModal').modal({
         keyboard: true,
         backdrop: "static",
@@ -139,11 +75,10 @@ function editModal() {
         console.log('ID FROM EDIT MODAL ' + id)
         let action = button.data('action');
         editUser($(this), id);
-    }).on('hidden.bs.modal', function(event){
+    }).on('hidden.bs.modal', (event) => {
 
     });
 }
-
 
 // редактируем юзера из модалки редактирования, заполняем данными, забираем данные, отправляем
 const editUser = async(modal, id) => {
@@ -155,17 +90,20 @@ const editUser = async(modal, id) => {
 
     allRoles.forEach(role => console.log('ROLES: ' + role.name))
 
-    modal.show();
-
     // заполняем форму юзером
-    modal.find('#ID').val(user.id).prop('disabled', true)
-    modal.find('#ID').attr('value, ')
-    modal.find('#firstName').val(user.firstName)
-    modal.find('#email').val(user.email)
+    // modal.find('#editID').val(user.id).prop('disabled', true)
+    $('#editID').val(user.id).prop('disabled', true)
+    // modal.find('#editID').innerHTML('What\'s wrong with this fucking modal window')
+    // $('#editID').innerHTML('What\'s wrong with this fucking modal window')
+    // modal.find('#editFirstName').val(user.firstName)
+    $('#editFirstName').val(user.firstName)
+    // modal.find('#editEmail').val(user.email)
+    $('#editEmail').val(user.email)
 
     allRoles.forEach(role => {
         user.roles.forEach(userRole => {
-            modal.find('#roles').append(new Option(role.name.replace('ROLE_', ''), role.id,
+            // modal.find('#editRoles').append(new Option(role.name.replace('ROLE_', ''), role.id,
+            $('#editRoles').append(new Option(role.name.replace('ROLE_', ''), role.id,
                 false, role.id == userRole.id ? true : false)).prop('required', true)
         })
 
@@ -177,14 +115,14 @@ const editUser = async(modal, id) => {
         // let id = modal.find('#ID').val().trim()
         console.log('USER ID FROM MODAL: ' + id)
 
-        let firstName = modal.find('#firstName').val().trim()
-        let email = modal.find(`#email`).val().trim()
+        const firstName = modal.find('#editFirstName').val().trim()
+        const email = modal.find(`#editEmail`).val().trim()
 
         console.log('EMAIL FROM FIELD: ' + email)
 
-        let password = modal.find(`#password`).val().trim()
+        const password = modal.find(`#editPassword`).val().trim()
 
-        let rolesIDFromForm = modal.find('#roles').val();
+        const rolesIDFromForm = modal.find('#editRoles').val();
         console.log('ROLES_ID: ' + rolesIDFromForm)
 
         let userRoles = []
@@ -205,7 +143,7 @@ const editUser = async(modal, id) => {
             return
         }
 
-        let data = {
+        const data = {
             id: id,
             firstName: firstName,
             email: email,
@@ -226,6 +164,68 @@ const editUser = async(modal, id) => {
             ${response.body.toString()}`)
         }
     })
+}
+
+const addNewUser = async() => {
+    const allRoles = await (await userFetchService.findAllRoles()).json()
+
+    const addUserForm = $('#newUser')
+
+    allRoles.forEach(role => {
+        addUserForm.find('#newRoles').append(new Option(role.name.replace('ROLE_', ''), role.id), role.id == 2 ? true : false, role.id == 2 ? true : false)
+    })
+
+    $('#addButton').on('click', async (e) => {
+        const firstName = addUserForm.find('#newFirstName').val().trim()
+        const email = addUserForm.find('#newEmail').val().trim()
+        const password = addUserForm.find('#newPassword').val().trim()
+
+        const rolesFromForm = addUserForm.find('#newRoles').val()
+
+        let selectedRoles = []
+        allRoles.forEach(role => {
+            rolesFromForm.forEach(roleIdFromForm => {
+                if (role.id == roleIdFromForm) {
+                    selectedRoles.push(role)
+                }
+            })
+        })
+
+        console.log('SELECTED ROLES: ' + selectedRoles)
+
+
+        // TODO вместо повтора кода сделать функции чекеры пароля и ролей и имейла
+        if (email === '' || password === '' || selectedRoles === []) {
+            alert('It seems You forgot email or password or roles')
+            return
+        }
+
+        if (!isEmail(email)) {
+            alert('Wrong email format')
+            return
+        }
+
+        const data = {
+            firstName: firstName,
+            email: email,
+            password: password,
+            roles: selectedRoles
+        }
+
+        const addResponse = await userFetchService.addNewUser(data)
+
+        if (addResponse.ok) {
+            getTableWithUsers()
+
+            let selectors = ['#newFirstName', 'newEmail', 'newPassword', 'newRoles']
+            selectors.forEach(selector => {
+                addResponse.find(selector).val('')
+            })
+        } else {
+            alert(addResponse.body.toString())
+        }
+    })
+
 }
 
 const isEmail = (email) => {

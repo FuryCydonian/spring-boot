@@ -32,17 +32,4 @@ public class TestController {
         model.addAttribute("auth_user", authUser);
         return "test";
     }
-
-    @PostMapping("/test/create")
-    public String saveUser(@ModelAttribute("user") User user) {
-        userService.saveUser(user);
-        return "redirect:/test";
-    }
-
-    @GetMapping("/findUser")
-    @ResponseBody
-    public User findUser(long id) {
-        return userService.getUserById(id);
-    }
-
 }

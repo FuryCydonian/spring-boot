@@ -67,28 +67,8 @@
                         </table>
                     </div>
                 </div>
-                    <!--форма заполнения нового юзера и две кнопки-->
-<!--                    <div class="container-fluid">-->
-<!--                        <div class="d-flex justify-content-center">-->
 
-<!--                            <div class="form-group align-items-center">-->
-<!--                                <form id="defaultSomeForm" data-hidden=true style="display: none">-->
-<!--                                    <input class="form-control" id="AddNewUserLogin" type="text"-->
-<!--                                           placeholder="email"><br>-->
-<!--                                    <input class="form-control" id="AddNewUserPassword" type="password"-->
-<!--                                           placeholder="password"><br>-->
-<!--                                    <input class="form-control" id="AddNewUserAge" type="number" placeholder="age"><br>-->
-<!--                                    <button class="btn btn-primary mb-2" type="button" id="addNewUserButton">Add new-->
-<!--                                        user-->
-<!--                                    </button>-->
-<!--                                </form>-->
-<!--                            </div>-->
-
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-
-                <!-- Tab panel for add new user-->
+<!--                ========= NEW USER TAB PANE FORM-->
                 <div class="tab-pane fade card" id="newUser" role="tabpanel" aria-labelledby="create-tab">
                     <h4 class="bg-light card-header">Add new user</h4>
                     <div class="container-fluid card-body d-flex justify-content-center" id="panelForCreate">
@@ -130,10 +110,166 @@
         </div>
 
         <!--modal for EDIT-->
-        <th:block th:insert="fragments/admin_js_blocks.html :: editModal"></th:block>
+<!--        <th:block th:insert="fragments/admin_js_blocks.html :: editModal"></th:block>-->
+        <!--============ EDIT USER MODAL-->
+        <th:block th:fragment="editModal">
+            <div class="modal fade" id="editModal" tabindex="-1" role="dialog"
+                 aria-labelledby="editModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editModalLabel">Edit User</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <!-- Form for edit user-->
+                        <div class="modal-body">
+                            <div class="container-fluid col-7">
+                                <form class="text-center" id="formEdit">
+                                    <div class="mb-3">
+                                        <label for="editID"><strong>ID</strong></label>
+                                        <input autocomplete="on" disabled class="form-control" type="text"
+                                               id="editID"
+                                               name="editID"
+                                               value="">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="editFirstName"><strong>First Name</strong></label>
+                                        <input required autocomplete="on" class="form-control" type="text"
+                                               id="editFirstName"
+                                               name="editFirstName"
+                                               placeholder="Enter First Name"
+                                               value="">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="editEmail"><strong>Email</strong></label>
+                                        <input required autocomplete="on" class="form-control"
+                                               type="email"
+                                               id="editEmail"
+                                               name="editEmail"
+                                               placeholder="Enter Email"
+                                               value="">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="editPassword"><strong>Password</strong></label>
+                                        <input required class="form-control" type="password"
+                                               id="editPassword"
+                                               name="editPassword"
+                                               placeholder="Enter Password"
+                                               value="">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="editRoles"><strong>Role</strong></label>
+                                        <select required class="form-control" name="editRoles"
+                                                id="editRoles"
+                                                multiple size="2">
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button form="formEdit" type="submit"
+                                    id="editButtonAccept"
+                                    class="btn btn-primary">
+                                Edit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+
+
 
         <!-- Modal for DELETE-->
-        <th:block th:insert="fragments/admin_js_blocks.html :: deleteModal"></th:block>
+<!--        <th:block th:insert="fragments/admin_js_blocks.html :: deleteModal"></th:block>-->
+        <!--============ DELETE USER MODAL-->
+        <th:block th:fragment="deleteModal">
+            <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
+                 aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Delete User</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <!-- Form for delete user-->
+                        <div class="modal-body">
+                            <div class="container-fluid col-7">
+                                <form class="text-center" id="formDelete">
+                                    <div class="mb-3">
+                                        <label for="ID"><strong>ID</strong></label>
+                                        <input autocomplete="on" disabled class="form-control" type="text"
+                                               id="ID"
+                                               name="ID"
+                                               value="">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="firstName"><strong>First Name</strong></label>
+                                        <input required autocomplete="on" class="form-control" type="text"
+                                               id="firstName"
+                                               name="firstName"
+                                               placeholder="Enter First Name"
+                                               value="">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="email"><strong>Email</strong></label>
+                                        <input required autocomplete="on" class="form-control"
+                                               type="email"
+                                               id="email"
+                                               name="email"
+                                               placeholder="Enter Email"
+                                               value="">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="password"><strong>Password</strong></label>
+                                        <input required class="form-control" type="password"
+                                               id="password"
+                                               name="password"
+                                               placeholder="Enter Password"
+                                               value="">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="roles"><strong>Role</strong></label>
+                                        <select required class="form-control" name="roles"
+                                                id="roles"
+                                                multiple size="2">
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button form="formDelete" type="submit"
+                                    id="deleteButtonAccept"
+                                    class="btn btn-danger">
+                                Delete
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </th:block>
 
     </section>
 </div>

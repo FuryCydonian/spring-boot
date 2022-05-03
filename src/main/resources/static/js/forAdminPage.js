@@ -32,7 +32,7 @@ const userFetchService = {
 
 const onClickTableButton = () => {
     $("#mainTableWithUsers").find('button').on('click', (event) => {
-        let targetButton = $(event.target);
+        let targetButton = $(event.target)
         console.log('target button: ' + targetButton)
 
         let userId = targetButton.data('id')

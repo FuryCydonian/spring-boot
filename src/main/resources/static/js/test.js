@@ -2,7 +2,7 @@ $(async function () {
     console.log('!!!!!!!!!!!!!!!   TEST.js file')
     await getTableWithUsers()
     await addNewUser()
-    editModalFunc()
+    modalFunc()
 })
 
 const userFetchService = {
@@ -51,14 +51,14 @@ const getTableWithUsers = async () => {
                     <td>
                         <button type="button" data-id="${user.id}" data-action="edit" class="btn btn-info btn-sm" 
                                 data-toggle="modal" 
-                                
                                 data-target="#editModal"
-                                
                                 id="editTableButton">Edit</button>
                     </td>
                     <td>
                         <button type="button" data-id="${user.id}" data-action="delete" class="btn btn-danger btn-sm" 
-                                data-toggle="modal" data-target="#deleteModal" id="deleteTableButton">Delete</button>
+                                data-toggle="modal" 
+                                data-target="#deleteModal" 
+                                id="deleteTableButton">Delete</button>
                     </td>
                 </tr>
             )`
@@ -67,17 +67,18 @@ const getTableWithUsers = async () => {
     })
 }
 
-const editModalFunc = () => {
+const modalFunc = () => {
     const editModal = $('#editModal')
-
+    const deleteModal = $('#deleteModal')
     console.log('EDIT MODAL: ' + editModal)
 
     $('#mainTableWithUsers').find('button').on('click', async (event) => {
         event.preventDefault()
         let targetButton = $(event.target)
         let userID = targetButton.data('id')
-        console.log('USER ID FROM BUTTON EDIT: ' + userID)
+        console.log('USER ID FROM BUTTON TABLE: ' + userID)
         let action = targetButton.data('action')
+        console.log('ACTION: ' + action)
 
         // const user = await (await userFetchService.findOneUserById(userID)).json()
         //
@@ -159,8 +160,10 @@ const editModalFunc = () => {
         // })
 
         if (action === 'edit') {
+            console.log('ID EDIT')
             await editUser(editModal, userID)
         } else if (action === 'delete') {
+            console.log('IF DELETE')
             await deleteUser(deleteModal, userID)
         }
     })
@@ -188,11 +191,8 @@ const editModalFunc = () => {
 // редактируем юзера из модалки редактирования, заполняем данными, забираем данные, отправляем
 const editUser = async(modal, userID) => {
     const user = await (await userFetchService.findOneUserById(userID)).json()
-
     console.log('USER FROM EDIT_USER FUNC: ' + user.firstName + ' ' + user.email)
-
     const allRoles = await (await userFetchService.findAllRoles()).json()
-
     allRoles.forEach(role => console.log('ROLES: ' + role.name))
 
     // заполняем форму юзером
@@ -205,10 +205,7 @@ const editUser = async(modal, userID) => {
             modal.find('#editRoles').append(new Option(role.name.replace('ROLE_', ''), role.id,
                 false, role.id == userRole.id ? true : false)).prop('required', true)
         })
-
     })
-
-    // modal.modal('show')
 
     modal.find(`#editButtonAccept`).on('click', async (event) => {
         event.preventDefault()
@@ -258,19 +255,45 @@ const editUser = async(modal, userID) => {
         let response = await userFetchService.updateUser(data, id)
 
         if (response.ok) {
-            await getTableWithUsers()
+            // await getTableWithUsers()
             // alert('User successfully updated')
             modal.modal('hide')
         } else {
-            alert(`response status: ${response.status}, 
-            ${response.body.toString()}`)
+            alert(`response status: ${response}`)
         }
     })
 }
 
-const deleteModal = $('#deleteModal')
-const deleteUser = () => {
+const deleteUser = async(modal, userID) => {
+    const user = await (await userFetchService.findOneUserById(userID)).json()
 
+    console.log('USER FROM DELETE_USER FUNC: ' + user.firstName + ' ' + user.email)
+    const allRoles = await (await userFetchService.findAllRoles()).json()
+    allRoles.forEach(role => console.log('ROLES: ' + role.name))
+
+    // заполняем форму юзером
+    modal.find('#ID').val(user.id).prop('disabled', true)
+    modal.find('#firstName').val(user.firstName)
+    modal.find('#email').val(user.email)
+
+    allRoles.forEach(role => {
+        user.roles.forEach(userRole => {
+            modal.find('#roles').append(new Option(role.name.replace('ROLE_', ''), role.id,
+                false, role.id == userRole.id ? true : false)).prop('required', true)
+        })
+    })
+
+    modal.find('#deleteButtonAccept').on('click', async (event) => {
+        event.preventDefault()
+        let response = await userFetchService.deleteUser(userID)
+
+        if (response.ok) {
+            // await getTableWithUsers()
+            modal.modal('hide')
+        } else {
+            alert(`response status: ${response}`)
+        }
+    })
 }
 
 const addNewUser = async() => {

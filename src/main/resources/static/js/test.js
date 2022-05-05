@@ -2,16 +2,14 @@ $(async function () {
     console.log('!!!!!!!!!!!!!!!   TEST.js file')
     await getTableWithUsers()
     await addNewUser()
-    editModal()
-    // await editModalFunc()
-    // await deleteModalFunc()
+    modalFunc()
 })
 
 const userFetchService = {
     head: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        // 'Referer': null
+        'Referer': null
     },
     findAllUsers: async () => await fetch('api/users'),
     findOneUserById: async (id) => await fetch(`api/users/${id}`),
@@ -33,7 +31,6 @@ const userFetchService = {
 }
 
 const getTableWithUsers = async () => {
-    // $(document).off('click', '#editTableButton')
     let tableBody = $('#mainTableWithUsers tbody')
     tableBody.empty()
 
@@ -52,172 +49,144 @@ const getTableWithUsers = async () => {
                     <td>${user.email}</td>
                     <td>${userRoles.slice(0, -1)}</td>
                     <td>
-                    
-                        <button type="button"  data-id="${user.id}" data-action="edit" class="btn btn-info btn-sm text-white" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#editModal"
-                                id="editTableButton"
-                                
-                                >Edit</button>
+                        <button type="button" data-id="${user.id}" data-action="edit" class="btn btn-info btn-sm" 
+                                data-toggle="modal" 
+                                data-target="#editModal"
+                                id="editTableButton">Edit</button>
                     </td>
                     <td>
-                        <button type="button"  data-id="${user.id}" data-action="delete" class="btn btn-danger btn-sm" 
+                        <button type="button" data-id="${user.id}" data-action="delete" class="btn btn-danger btn-sm" 
                                 data-toggle="modal" 
                                 data-target="#deleteModal" 
-                                id="dBtn${user.id}"
-                                onclick="deleteModalFunc(${user.id})"
-                                >Delete</button>
+                                id="deleteTableButton">Delete</button>
                     </td>
                 </tr>
             )`
-
-            // id="eBtn${user.id}"
-            // onclick="editModalFunc(${user.id})"
-
             tableBody.append(tableRow)
         })
     })
-
 }
 
-// const editModalFunc = async () => {
-//     const editModal = $('#editModal')
-//     console.log('EDIT MODAL: ' + editModal)
-//
-//     $(document).on('click', '#editTableButton', async (event) => {
-//         event.preventDefault()
-//         let targetButton = $(event.target)
-//         let userID = targetButton.data('id')
-//         console.log('USER ID FROM BUTTON TABLE IN EDIT MODAL: ' + userID)
-//
-//         await editUser(editModal, userID)
-//
-//         // editModal.modal('show')
-//         // let action = targetButton.data('action')
-//         // console.log('ACTION: ' + action)
-//
-//         // const user = await (await userFetchService.findOneUserById(userID)).json()
-//         //
-//         // console.log('USER FROM EDIT_USER FUNC: ' + user.firstName + ' ' + user.email)
-//         //
-//         // const allRoles = await (await userFetchService.findAllRoles()).json()
-//         //
-//         // allRoles.forEach(role => console.log('ROLES: ' + role.name))
-//         //
-//         // // заполняем форму юзером
-//         // editModal.find('#editID').val(user.id).prop('disabled', true)
-//         // editModal.find('#editFirstName').val(user.firstName)
-//         // editModal.find('#editEmail').val(user.email)
-//         //
-//         // allRoles.forEach(role => {
-//         //     user.roles.forEach(userRole => {
-//         //         editModal.find('#editRoles').append(new Option(role.name.replace('ROLE_', ''), role.id,
-//         //             false, role.id == userRole.id ? true : false)).prop('required', true)
-//         //     })
-//         //
-//         // })
-//         // editModal.modal('show')
-//         //
-//         // editModal.find(`#editButtonAccept`).on('click', async (event) => {
-//         //     event.preventDefault()
-//         //     console.log('EDIT BUTTON CLICKED')
-//         //
-//         //     const id = editModal.find('#editID').val().trim()
-//         //     console.log('USER ID FROM MODAL: ' + id)
-//         //
-//         //     const firstName = editModal.find('#editFirstName').val().trim()
-//         //     const email = editModal.find(`#editEmail`).val().trim()
-//         //
-//         //     console.log('EMAIL FROM FIELD: ' + email)
-//         //
-//         //     const password = editModal.find(`#editPassword`).val().trim()
-//         //
-//         //     const rolesIDFromForm = editModal.find('#editRoles').val();
-//         //     console.log('ROLES_ID: ' + rolesIDFromForm)
-//         //
-//         //     let userRoles = []
-//         //
-//         //     console.log(allRoles)
-//         //
-//         //     allRoles.forEach(roleFromDB => {
-//         //         rolesIDFromForm.forEach(roleID => roleID == roleFromDB.id ? userRoles.push(roleFromDB) : null)
-//         //     })
-//         //
-//         //     if (email === '' || password === '') {
-//         //         alert('It seems You forgot email or password')
-//         //         return
-//         //     }
-//         //
-//         //     if (!isEmail(email)) {
-//         //         alert('Wrong email format')
-//         //         return
-//         //     }
-//         //
-//         //     const data = {
-//         //         id: id,
-//         //         firstName: firstName,
-//         //         email: email,
-//         //         password: password,
-//         //         roles: userRoles
-//         //     }
-//         //
-//         //     console.log(data)
-//         //
-//         //     let response = await userFetchService.updateUser(data, id)
-//         //
-//         //     if (response.ok) {
-//         //         await getTableWithUsers()
-//         //         // alert('User successfully updated')
-//         //         editModal.modal('hide')
-//         //     } else {
-//         //         alert(`response status: ${response.status},
-//         //                 ${response.body.toString()}`)
-//         //     }
-//         // })
-//
-//         // if (action === 'edit') {
-//         //     console.log('ID EDIT')
-//         //     await editUser(editModal, userID)
-//         // } else if (action === 'delete') {
-//         //     console.log('IF DELETE')
-//         //     // await deleteUser(deleteModal, userID)
-//         // }
-//     })
-//
-//
-// }
-
-const deleteModalFunc = (tableButtonID) => {
+const modalFunc = () => {
+    const editModal = $('#editModal')
     const deleteModal = $('#deleteModal')
-    // const deleteModal = $('#deleteModal')
-    console.log('DELETE MODAL: ' + deleteModal)
+    console.log('EDIT MODAL: ' + editModal)
 
-    $(document).on('click', `#${tableButtonID}`, async (event) => {
+    $('#mainTableWithUsers').on('click', 'button', async (event) => {
         event.preventDefault()
         let targetButton = $(event.target)
         let userID = targetButton.data('id')
-        console.log('USER ID FROM BUTTON TABLE IN EDIT MODAL: ' + userID)
+        console.log('USER ID FROM BUTTON TABLE: ' + userID)
+        let action = targetButton.data('action')
+        console.log('ACTION: ' + action)
 
-        await deleteUser(deleteModal, userID)
+        // const user = await (await userFetchService.findOneUserById(userID)).json()
+        //
+        // console.log('USER FROM EDIT_USER FUNC: ' + user.firstName + ' ' + user.email)
+        //
+        // const allRoles = await (await userFetchService.findAllRoles()).json()
+        //
+        // allRoles.forEach(role => console.log('ROLES: ' + role.name))
+        //
+        // // заполняем форму юзером
+        // editModal.find('#editID').val(user.id).prop('disabled', true)
+        // editModal.find('#editFirstName').val(user.firstName)
+        // editModal.find('#editEmail').val(user.email)
+        //
+        // allRoles.forEach(role => {
+        //     user.roles.forEach(userRole => {
+        //         editModal.find('#editRoles').append(new Option(role.name.replace('ROLE_', ''), role.id,
+        //             false, role.id == userRole.id ? true : false)).prop('required', true)
+        //     })
+        //
+        // })
+        // editModal.modal('show')
+        //
+        // editModal.find(`#editButtonAccept`).on('click', async (event) => {
+        //     event.preventDefault()
+        //     console.log('EDIT BUTTON CLICKED')
+        //
+        //     const id = editModal.find('#editID').val().trim()
+        //     console.log('USER ID FROM MODAL: ' + id)
+        //
+        //     const firstName = editModal.find('#editFirstName').val().trim()
+        //     const email = editModal.find(`#editEmail`).val().trim()
+        //
+        //     console.log('EMAIL FROM FIELD: ' + email)
+        //
+        //     const password = editModal.find(`#editPassword`).val().trim()
+        //
+        //     const rolesIDFromForm = editModal.find('#editRoles').val();
+        //     console.log('ROLES_ID: ' + rolesIDFromForm)
+        //
+        //     let userRoles = []
+        //
+        //     console.log(allRoles)
+        //
+        //     allRoles.forEach(roleFromDB => {
+        //         rolesIDFromForm.forEach(roleID => roleID == roleFromDB.id ? userRoles.push(roleFromDB) : null)
+        //     })
+        //
+        //     if (email === '' || password === '') {
+        //         alert('It seems You forgot email or password')
+        //         return
+        //     }
+        //
+        //     if (!isEmail(email)) {
+        //         alert('Wrong email format')
+        //         return
+        //     }
+        //
+        //     const data = {
+        //         id: id,
+        //         firstName: firstName,
+        //         email: email,
+        //         password: password,
+        //         roles: userRoles
+        //     }
+        //
+        //     console.log(data)
+        //
+        //     let response = await userFetchService.updateUser(data, id)
+        //
+        //     if (response.ok) {
+        //         await getTableWithUsers()
+        //         // alert('User successfully updated')
+        //         editModal.modal('hide')
+        //     } else {
+        //         alert(`response status: ${response.status},
+        //                 ${response.body.toString()}`)
+        //     }
+        // })
+
+        if (action === 'edit') {
+            console.log('ID EDIT')
+            await editUser(editModal, userID)
+        } else if (action === 'delete') {
+            console.log('IF DELETE')
+            await deleteUser(deleteModal, userID)
+        }
     })
-}
-const editModal = () => {
-    $('#editModal').modal({
-        keyboard: true,
-        backdrop: "static",
-        show: false,
-    }).on('show.bs.modal', async (event) => {
-            event.preventDefault()
-            let button = $(event.relatedTarget);
-            console.log(button)
-            let id = button.data('id');
-            console.log('ID FROM EDIT MODAL ' + id)
-            let action = button.data('action');
-            await editUser($(this), id);
-        }).on('hidden.bs.modal', (event) => {
+};
 
-    });
-}
+
+// const editModal = () => {
+//     editModal.modal({
+//         keyboard: true,
+//         backdrop: "static",
+//         // show: false,
+//     }).on('show.bs.modal', '#editModal', async (event) => {
+//             event.preventDefault()
+//             let button = $(event.relatedTarget);
+//             console.log(button)
+//             let id = button.data('id');
+//             console.log('ID FROM EDIT MODAL ' + id)
+//             let action = button.data('action');
+//             await editUser($(this), id);
+//         }).on('hidden.bs.modal', (event) => {
+//
+//     });
+// }
 
 // редактируем юзера из модалки редактирования, заполняем данными, забираем данные, отправляем
 const editUser = async(modal, userID) => {
@@ -230,7 +199,6 @@ const editUser = async(modal, userID) => {
     modal.find('#editID').val(user.id).prop('disabled', true)
     modal.find('#editFirstName').val(user.firstName)
     modal.find('#editEmail').val(user.email)
-    modal.find('#editPassword').empty()
     modal.find('#editRoles').empty()
 
     allRoles.forEach(role => {
@@ -239,8 +207,6 @@ const editUser = async(modal, userID) => {
                 false, role.id == userRole.id ? true : false)).prop('required', true)
         })
     })
-
-    modal.show()
 
     modal.find(`#editButtonAccept`).click( async (event) => {
         event.preventDefault()
@@ -290,12 +256,8 @@ const editUser = async(modal, userID) => {
         let response = await userFetchService.updateUser(data, id)
 
         if (response.ok) {
-            // $(`#editTableButton`).off('click')
-            $(document).off('click', '#editTableButton')
-            // $('#editButtonAccept').off('click')
             await getTableWithUsers()
-            modal.on('hidden.bs.modal', (e) => {})
-            alert(`User ${user.id} successfully updated`)
+            alert('User successfully updated')
             modal.modal('hide')
         } else {
             alert(`response status: ${response}`)
@@ -314,22 +276,22 @@ const deleteUser = async(modal, userID) => {
     modal.find('#ID').val(user.id).prop('disabled', true)
     modal.find('#firstName').val(user.firstName).prop('disabled', true)
     modal.find('#email').val(user.email).prop('disabled', true)
-
     modal.find('#roles').empty().prop('disabled', true)
+
     allRoles.forEach(role => {
         user.roles.forEach(userRole => {
             modal.find('#roles').append(new Option(role.name.replace('ROLE_', ''), role.id,
-                false, role.id == userRole.id ? true : false))
+                false, role.id == userRole.id ? true : false)).prop('required', true)
         })
     })
 
-    modal.find('#deleteButtonAccept').on('click', async (event) => {
+    modal.find('#deleteButtonAccept').click(async (event) => {
         event.preventDefault()
         let response = await userFetchService.deleteUser(userID)
 
         if (response.ok) {
             await getTableWithUsers()
-            alert(`USER ${user.id} REMOVED`)
+            alert(`User ${user.id} deleted`)
             modal.modal('hide')
         } else {
             alert(`response status: ${response}`)
@@ -337,7 +299,7 @@ const deleteUser = async(modal, userID) => {
     })
 }
 
-const addNewUser = async(tableBody) => {
+const addNewUser = async() => {
     const allRoles = await (await userFetchService.findAllRoles()).json()
 
     const addUserForm = $('#newUser')
@@ -393,7 +355,7 @@ const addNewUser = async(tableBody) => {
 
             let selectors = ['#newFirstName', 'newEmail', 'newPassword']
             selectors.forEach(selector => {
-                addUserForm.reset()
+                addUserForm.find(selector).reset()
             })
         } else {
             alert('Response status: ' + addResponse.statusText)

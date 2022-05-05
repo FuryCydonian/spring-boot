@@ -72,7 +72,7 @@ const modalFunc = () => {
     const deleteModal = $('#deleteModal')
     console.log('EDIT MODAL: ' + editModal)
 
-    $('#mainTableWithUsers').find('button').on('click', async (event) => {
+    $(document).on('click', '#mainTableWithUsers button', async (event) => {
         event.preventDefault()
         let targetButton = $(event.target)
         let userID = targetButton.data('id')
@@ -199,6 +199,7 @@ const editUser = async(modal, userID) => {
     modal.find('#editID').val(user.id).prop('disabled', true)
     modal.find('#editFirstName').val(user.firstName)
     modal.find('#editEmail').val(user.email)
+    modal.find('#editRoles').empty()
 
     allRoles.forEach(role => {
         user.roles.forEach(userRole => {
@@ -207,7 +208,7 @@ const editUser = async(modal, userID) => {
         })
     })
 
-    modal.find(`#editButtonAccept`).on('click', async (event) => {
+    modal.find(`#editButtonAccept`).click( async (event) => {
         event.preventDefault()
         console.log('EDIT BUTTON CLICKED')
 
@@ -255,8 +256,8 @@ const editUser = async(modal, userID) => {
         let response = await userFetchService.updateUser(data, id)
 
         if (response.ok) {
-            // await getTableWithUsers()
-            // alert('User successfully updated')
+            await getTableWithUsers()
+            alert('User successfully updated')
             modal.modal('hide')
         } else {
             alert(`response status: ${response}`)
@@ -273,8 +274,9 @@ const deleteUser = async(modal, userID) => {
 
     // заполняем форму юзером
     modal.find('#ID').val(user.id).prop('disabled', true)
-    modal.find('#firstName').val(user.firstName)
-    modal.find('#email').val(user.email)
+    modal.find('#firstName').val(user.firstName).prop('disabled', true)
+    modal.find('#email').val(user.email).prop('disabled', true)
+    modal.find('#roles').empty().prop('disabled', true)
 
     allRoles.forEach(role => {
         user.roles.forEach(userRole => {
@@ -283,12 +285,13 @@ const deleteUser = async(modal, userID) => {
         })
     })
 
-    modal.find('#deleteButtonAccept').on('click', async (event) => {
+    modal.find('#deleteButtonAccept').click(async (event) => {
         event.preventDefault()
         let response = await userFetchService.deleteUser(userID)
 
         if (response.ok) {
-            // await getTableWithUsers()
+            await getTableWithUsers()
+            alert(`User ${user.id} deleted`)
             modal.modal('hide')
         } else {
             alert(`response status: ${response}`)

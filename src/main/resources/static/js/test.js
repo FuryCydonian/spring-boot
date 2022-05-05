@@ -72,7 +72,7 @@ const modalFunc = () => {
     const deleteModal = $('#deleteModal')
     console.log('EDIT MODAL: ' + editModal)
 
-    $(document).on('click', '#mainTableWithUsers button', async (event) => {
+    $('#mainTableWithUsers').on('click', 'button', async (event) => {
         event.preventDefault()
         let targetButton = $(event.target)
         let userID = targetButton.data('id')

@@ -1,4 +1,4 @@
-$(function () {
+$(async function () {
     console.log('HELLO FROM SPANISH JS TEST')
 
     const fetchService = {
@@ -76,21 +76,23 @@ $(function () {
     const editPassword = document.getElementById('editPassword')
     const editRoles = document.getElementById('editRoles')
 
-
-    let option = ''
+    let action = ''
 
     let editTableButton = document.getElementById('editTableButton')
 
     let tempButton = document.getElementById('tempButton')
 
-    tempButton.addEventListener('click', (event) => {
-        // editID.val()
-        editFirstName.value = ''
-        editEmail.value = ''
-        // editRoles
-        editModal.show()
-        option = 'test'
-    })
+    let allUsers = await (await fetchService.findAllUsers()).json()
+    let allRoles = await (await fetchService.findAllRoles()).json()
+
+    // tempButton.addEventListener('click', (event) => {
+    //     // editID.val()
+    //     editFirstName.value = ''
+    //     editEmail.value = ''
+    //     // editRoles
+    //     editModal.show()
+    //     option = 'test'
+    // })
 
     const drawTableRows = (usersList) => {
         console.log(usersList)
@@ -108,7 +110,7 @@ $(function () {
                     <td>
                         <button type="button" data-id="${user.id}" data-action="edit" class="btn btn-info btn-sm text-white" 
                                 data-bs-toggle="modal" 
-                                data-bs-target="#editModal"
+                                
                                 id="editTableButton">Edit</button>
                     </td>
                     <td>
@@ -123,9 +125,11 @@ $(function () {
         tableBody.innerHTML = result
     }
 
-    fetchService.findAllUsers()
-        .then(response => response.json())
-        .then(users => drawTableRows(users))
+    drawTableRows(allUsers)
+
+    // fetchService.findAllUsers()
+    //     .then(response => response.json())
+    //     .then(users => drawTableRows(users))
 
 
     const on = (element, event, selector, handler) => {
@@ -147,5 +151,53 @@ $(function () {
         //     .then(() => tableBody.removeChild(row))
 
         // TODO доделать окно удаления, вставить туда значения, вообще доделать удаление
+    })
+
+
+    // Edit function
+    let idForm = 0
+    on(document, 'click', '#editTableButton',  async e => {
+        const editButton = e.target
+        const row = editButton.parentNode.parentNode
+        idForm = editButton.getAttribute('data-id')
+
+        // const user = await (await fetchService.findOneUserById(idForm)).json()
+
+        const firstNameForm = row.children[1].innerHTML
+        const emailForm = row.children[2].innerHTML
+        // const passwordForm = row.children[3].innerHTML
+        // const rolesForm = row.children[4].innerHTML
+
+        editID.value = idForm
+        editFirstName.value = firstNameForm
+        editEmail.value = emailForm
+        editPassword.value = ''
+
+        // allRoles.forEach(role => {
+        //     user.roles.forEach(userRole => {
+        //         modal.find('#editRoles').append(new Option(role.name.replace('ROLE_', ''), role.id,
+        //             false, role.id == userRole.id ? true : false)).prop('required', true)
+        //     })
+        // })
+
+        allRoles.forEach(role => {
+            document.querySelector('#editRoles').append(new Option(role.name.replace('ROLE_', ''), role.id, false,
+                role.id == 2 ? true : false))
+        })
+
+        let action = editButton.getAttribute('data-action')
+
+        editModal.show()
+    })
+
+    editForm.addEventListener('submit', e => {
+        e.preventDefault()
+        if (action === 'edit') {
+            console.log('EDIT ACTION')
+        } else if (action === 'delete') {
+            console.log('DELETE ACTION')
+        }
+
+        editModal.hide()
     })
 })

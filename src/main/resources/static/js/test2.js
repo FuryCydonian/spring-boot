@@ -68,25 +68,6 @@ const getTableWithUsers = async () => {
     })
 }
 
-const onClickTableButton = async (event) => {
-    const editModal = $('#editModal')
-    const deleteModal = $('#deleteModal')
-    console.log('EDIT MODAL: ' + editModal)
-    event.preventDefault()
-    let targetButton = $(event.target)
-    let userID = targetButton.data('id')
-    console.log('USER ID FROM BUTTON TABLE: ' + userID)
-    let action = targetButton.data('action')
-    console.log('ACTION: ' + action)
-
-    if (action === 'edit') {
-        console.log('ID EDIT')
-        await editUser(editModal, userID)
-    } else if (action === 'delete') {
-        console.log('IF DELETE')
-        await deleteUser(deleteModal, userID)
-    }
-}
 const modalFunc = () => {
     // const editModal = $('#editModal')
     // const deleteModal = $('#deleteModal')
@@ -110,6 +91,25 @@ const modalFunc = () => {
     )
 };
 
+const onClickTableButton = async (event) => {
+    const editModal = $('#editModal')
+    const deleteModal = $('#deleteModal')
+    console.log('EDIT MODAL: ' + editModal)
+    event.preventDefault()
+    let targetButton = $(event.target)
+    let userID = targetButton.data('id')
+    console.log('USER ID FROM BUTTON TABLE: ' + userID)
+    let action = targetButton.data('action')
+    console.log('ACTION: ' + action)
+
+    if (action === 'edit') {
+        console.log('ID EDIT')
+        await editUser(editModal, userID)
+    } else if (action === 'delete') {
+        console.log('IF DELETE')
+        await deleteUser(deleteModal, userID)
+    }
+}
 
 // const editModal = () => {
 //     const editModal = $('#editModal')
@@ -150,63 +150,68 @@ const editUser = async(modal, userID) => {
         })
     })
 
-    modal.find(`#formEdit`).submit(async (event) => {
-        event.preventDefault()
-        event.stopPropagation()
-        console.log('EDIT BUTTON CLICKED')
-
-        let id = modal.find('#editID').val().trim()
-        console.log('USER ID FROM MODAL: ' + id)
-
-        const firstName = modal.find('#editFirstName').val().trim()
-        const email = modal.find(`#editEmail`).val().trim()
-
-        console.log('EMAIL FROM FIELD: ' + email)
-
-        const password = modal.find(`#editPassword`).val().trim()
-
-        const rolesIDFromForm = modal.find('#editRoles').val();
-        console.log('ROLES_ID: ' + rolesIDFromForm)
-
-        let userRoles = []
-
-        console.log(allRoles)
-
-        allRoles.forEach(roleFromDB => {
-            rolesIDFromForm.forEach(roleID => roleID == roleFromDB.id ? userRoles.push(roleFromDB) : null)
-        })
-
-        if (email === '' || password === '') {
-            alert('It seems You forgot email or password')
-            return
-        }
-
-        if (!isEmail(email)) {
-            alert('Wrong email format')
-            return
-        }
-
-        const data = {
-            id: id,
-            firstName: firstName,
-            email: email,
-            password: password,
-            roles: userRoles
-        }
-
-        console.log(data)
-
-        let response = await userFetchService.updateUser(data, id)
-
-        if (response.ok) {
-            await getTableWithUsers()
-            alert('User successfully updated')
-            modal.modal('hide')
-        } else {
-            alert(`response status: ${response}`)
-        }
-    })
+    modal.find(`#formEdit`).on('submit', onSubmitEditForm)
 }
+
+const onSubmitEditForm = async (event) => {
+    event.preventDefault()
+    // event.stopPropagation()
+    let modal = $('#editModal')
+
+    console.log('EDIT BUTTON CLICKED')
+
+    let id = modal.find('#editID').val().trim()
+    console.log('USER ID FROM MODAL: ' + id)
+
+    const firstName = modal.find('#editFirstName').val().trim()
+    const email = modal.find(`#editEmail`).val().trim()
+
+    console.log('EMAIL FROM FIELD: ' + email)
+
+    const password = modal.find(`#editPassword`).val().trim()
+
+    const rolesIDFromForm = modal.find('#editRoles').val();
+    console.log('ROLES_ID: ' + rolesIDFromForm)
+
+    let userRoles = []
+
+    console.log(allRoles)
+
+    allRoles.forEach(roleFromDB => {
+        rolesIDFromForm.forEach(roleID => roleID == roleFromDB.id ? userRoles.push(roleFromDB) : null)
+    })
+
+    if (email === '' || password === '') {
+        alert('It seems You forgot email or password')
+        return
+    }
+
+    if (!isEmail(email)) {
+        alert('Wrong email format')
+        return
+    }
+
+    const data = {
+        id: id,
+        firstName: firstName,
+        email: email,
+        password: password,
+        roles: userRoles
+    }
+
+    console.log(data)
+
+    let response = await userFetchService.updateUser(data, id)
+
+    if (response.ok) {
+        await getTableWithUsers()
+        alert('User successfully updated')
+        modal.modal('hide')
+    } else {
+        alert(`response status: ${response}`)
+    }
+}
+
 
 const deleteUser = async(modal, userID) => {
     const user = await (await userFetchService.findOneUserById(userID)).json()
@@ -298,7 +303,7 @@ const addNewUser = async() => {
 
             let selectors = ['#newFirstName', 'newEmail', 'newPassword']
             selectors.forEach(selector => {
-                addUserForm.find(selector).reset()
+                addUserForm.find(selector).empty()
             })
         } else {
             alert('Response status: ' + addResponse.statusText)

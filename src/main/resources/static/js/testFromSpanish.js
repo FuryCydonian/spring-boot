@@ -1,30 +1,30 @@
 $(async function () {
     console.log('HELLO FROM SPANISH JS TEST')
 
-    const fetchService = {
-        head: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Referer': null
-        },
-        findAllUsers: async () => await fetch('api/users'),
-        findOneUserById: async (id) => await fetch(`api/users/${id}`),
-        addNewUser: async (user) => await fetch('api/users', {
-            method: 'POST',
-            headers: fetchService.head,
-            body: JSON.stringify(user)
-        }),
-        updateUser: async (user, id) => await fetch(`api/users/${id}`, {
-            method: 'PUT',
-            headers: fetchService.head,
-            body: JSON.stringify(user)
-        }),
-        deleteUser: async (id) => await fetch(`api/users/${id}`, {
-            method: 'DELETE',
-            headers: fetchService.head
-        }),
-        findAllRoles: async () => await fetch('api/roles'),
-    }
+    // const fetchService = {
+    //     head: {
+    //         'Accept': 'application/json',
+    //         'Content-Type': 'application/json',
+    //         'Referer': null
+    //     },
+    //     findAllUsers: async () => await fetch('api/users'),
+    //     findOneUserById: async (id) => await fetch(`api/users/${id}`),
+    //     addNewUser: async (user) => await fetch('api/users', {
+    //         method: 'POST',
+    //         headers: fetchService.head,
+    //         body: JSON.stringify(user)
+    //     }),
+    //     updateUser: async (user, id) => await fetch(`api/users/${id}`, {
+    //         method: 'PUT',
+    //         headers: fetchService.head,
+    //         body: JSON.stringify(user)
+    //     }),
+    //     deleteUser: async (id) => await fetch(`api/users/${id}`, {
+    //         method: 'DELETE',
+    //         headers: fetchService.head
+    //     }),
+    //     findAllRoles: async () => await fetch('api/roles'),
+    // }
 
     // const getTableWithUsers = async () => {
     //     let tableBody = $('#mainTableWithUsers tbody')
@@ -63,10 +63,18 @@ $(async function () {
     //     })
     // }
 
-    // const users = 'http://localhost:8080/api/users'
+    const mainUrl = 'http://localhost:8080/api/users'
+    const rolesUrl = 'http://localhost:8080/api/roles'
+    const headers = { 'Content-Type': 'application/json' }
+
     const tableBody = document.querySelector('tbody')
     let result = ''
+    let action = ''
 
+    let allUsers = await (await fetch(mainUrl)).json()
+    let allRoles = await (await fetch(rolesUrl)).json()
+
+    //========== EDIT DECLARATION VARS
     const editModal = new bootstrap.Modal(document.getElementById('editModal'))
     const editForm = document.getElementById('formEdit')
 
@@ -76,14 +84,22 @@ $(async function () {
     const editPassword = document.getElementById('editPassword')
     const editRoles = document.getElementById('editRoles')
 
-    let action = ''
-
     let editTableButton = document.getElementById('editTableButton')
 
-    let tempButton = document.getElementById('tempButton')
+    // let tempButton = document.getElementById('tempButton')
 
-    let allUsers = await (await fetchService.findAllUsers()).json()
-    let allRoles = await (await fetchService.findAllRoles()).json()
+    // TODO переименовать здесь и в странице айдтшники элементов удаления
+    //========== DELETE DECLARATION VARS
+    const ID = document.getElementById('editID')
+    const firstName = document.getElementById('editFirstName')
+    const email = document.getElementById('editEmail')
+    const password = document.getElementById('editPassword')
+    const roles = document.getElementById('editRoles')
+
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'))
+    const deleteForm = document.getElementById('formDelete')
+
+    let deleteTableButton = document.getElementById('deleteTableButton')
 
     // tempButton.addEventListener('click', (event) => {
     //     // editID.val()
@@ -125,12 +141,11 @@ $(async function () {
         tableBody.innerHTML = result
     }
 
+    const getUserList = () => {
+        fetch()
+    }
+
     drawTableRows(allUsers)
-
-    // fetchService.findAllUsers()
-    //     .then(response => response.json())
-    //     .then(users => drawTableRows(users))
-
 
     const on = (element, event, selector, handler) => {
         console.log(element)
@@ -141,63 +156,88 @@ $(async function () {
         })
     }
 
+    // ================== Delete button ====================================
     on(document, 'click', '#deleteTableButton', e => {
-        const row = e.target.parentNode.parentNode
-        const id = e.target.getAttribute('data-id')
-        console.log(id)
+        const deleteButton = e.target
+        const row = deleteButton.parentNode.parentNode
+        let deleteID = deleteButton.getAttribute('data-id')
+        console.log(deleteID)
 
-        // fetchService.deleteUser(id)
-        //     .then(response => response.json())
-        //     .then(() => tableBody.removeChild(row))
+        fetch(`${mainUrl}/${deleteID}`)
+            .then(response => response.json())
+            .then(data => showDeleteModal(data))
 
         // TODO доделать окно удаления, вставить туда значения, вообще доделать удаление
     })
 
 
-    // Edit function
-    let idForm = 0
+    // ====================  Edit button  ======================================
     on(document, 'click', '#editTableButton',  async e => {
         const editButton = e.target
         const row = editButton.parentNode.parentNode
-        idForm = editButton.getAttribute('data-id')
+        let editID = editButton.getAttribute('data-id')
+        console.log(editID)
 
-        // const user = await (await fetchService.findOneUserById(idForm)).json()
+        fetch(`${mainUrl}/${editID}`)
+            .then(response => response.json())
+            .then(data => showEditModal(data))
+    })
 
-        const firstNameForm = row.children[1].innerHTML
-        const emailForm = row.children[2].innerHTML
-        // const passwordForm = row.children[3].innerHTML
-        // const rolesForm = row.children[4].innerHTML
+    const showDeleteModal = user => {
 
-        editID.value = idForm
-        editFirstName.value = firstNameForm
-        editEmail.value = emailForm
+    }
+
+    const showEditModal = user => {
+
+        editID.value = user.id
+        editFirstName.value = user.firstName
+        editEmail.value = user.email
         editPassword.value = ''
 
-        // allRoles.forEach(role => {
-        //     user.roles.forEach(userRole => {
-        //         modal.find('#editRoles').append(new Option(role.name.replace('ROLE_', ''), role.id,
-        //             false, role.id == userRole.id ? true : false)).prop('required', true)
-        //     })
-        // })
-
+        editRoles.innerHTML = ''
         allRoles.forEach(role => {
-            document.querySelector('#editRoles').append(new Option(role.name.replace('ROLE_', ''), role.id, false,
+            editRoles.append(new Option(role.name.replace('ROLE_', ''), role.id, false,
                 role.id == 2 ? true : false))
         })
 
-        let action = editButton.getAttribute('data-action')
+
+        const editButtonAccept = document.querySelector('#editButtonAccept')
+        // let action = editButton.getAttribute('data-action')
 
         editModal.show()
-    })
 
-    editForm.addEventListener('submit', e => {
-        e.preventDefault()
-        if (action === 'edit') {
-            console.log('EDIT ACTION')
-        } else if (action === 'delete') {
-            console.log('DELETE ACTION')
-        }
+        editButtonAccept.addEventListener('click', e => {
+            e.preventDefault()
 
-        editModal.hide()
-    })
+            let selectedRoles = []
+            allRoles.forEach(roleFromDB => {
+                editRoles.forEach(roleID => roleID == roleFromDB.id ? selectedRoles.push(roleFromDB) : null)
+            })
+
+            // let prevPassword = user.password
+
+            if (editEmail.value === '' || editPassword.value === '') {
+                alert('It seems You forgot email or password')
+                return
+            }
+
+            let data = {
+                id: editID.value,
+                firstName: editFirstName.value,
+                email: editEmail.value,
+                password: editPassword.value,
+                roles: selectedRoles
+            }
+            fetch(mainUrl, {
+                method: 'PUT',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+            drawTableRows()
+
+            editModal.hide()
+        })
+    }
+
+
 })

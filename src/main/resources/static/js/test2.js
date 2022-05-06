@@ -1,319 +1,229 @@
-$(async function () {
-    console.log('!!!!!!!!!!!!!!!   TEST.js file')
-    await getTableWithUsers()
-    await addNewUser()
-    modalFunc()
-    // editModal()
-})
-
-const userFetchService = {
-    head: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Referer': null
-    },
-    findAllUsers: async () => await fetch('api/users'),
-    findOneUserById: async (id) => await fetch(`api/users/${id}`),
-    addNewUser: async (user) => await fetch('api/users', {
-        method: 'POST',
-        headers: userFetchService.head,
-        body: JSON.stringify(user)
-    }),
-    updateUser: async (user, id) => await fetch(`api/users/${id}`, {
-        method: 'PUT',
-        headers: userFetchService.head,
-        body: JSON.stringify(user)
-    }),
-    deleteUser: async (id) => await fetch(`api/users/${id}`, {
-        method: 'DELETE',
-        headers: userFetchService.head
-    }),
-    findAllRoles: async () => await fetch('api/roles'),
+const url = 'http://localhost:8080/api/users'
+const urlRoles = 'http://localhost:8080/api/roles'
+let usersList = document.querySelector('#usersList')
+let result = ''
+getUsers()
+function getUsers() {
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            drawTable(data)
+        })
+        .catch(err => console.log(err))
 }
-
-const getTableWithUsers = async () => {
-    let tableBody = $('#mainTableWithUsers tbody')
-    tableBody.empty()
-
-    let usersJson = (await userFetchService.findAllUsers()).json()
-    usersJson.then(users => {
-        console.log(users)
-        users.forEach(user => {
-            let userRoles = ``
-            for (let role of user.roles) {
-                userRoles += role.name.replace('ROLE_', '') + ' '
-            }
-            let tableRow = `$(
-                <tr>
+const drawTable = (users) => {
+    usersList.innerHTML = ''
+    result = ''
+    users.forEach( user => {
+        let userRoles = ``
+        for(let role of user.roles) {
+            userRoles += role.name.replace("ROLE_", "") + ' '
+        }
+        result += `<tr>
                     <td>${user.id}</td>
                     <td>${user.firstName}</td>
                     <td>${user.email}</td>
-                    <td>${userRoles.slice(0, -1)}</td>
-                    <td>
-                        <button type="button" data-id="${user.id}" data-action="edit" class="btn btn-info btn-sm" 
-                                data-toggle="modal" 
-                                data-target="#editModal"
-                                id="editTableButton">Edit</button>
-                    </td>
-                    <td>
-                        <button type="button" data-id="${user.id}" data-action="delete" class="btn btn-danger btn-sm" 
-                                data-toggle="modal" 
-                                data-target="#deleteModal" 
-                                id="deleteTableButton">Delete</button>
-                    </td>
-                </tr>
-            )`
-            tableBody.append(tableRow)
-        })
+                    <td>${userRoles}</td>
+                    <td><button type="button" class="btn btn-info text-white editButton" data-bs-toggle="modal">Edit</button></td>
+                    <td><button type="button" class="btn btn-danger text-white deleteButton" data-bs-toggle="modal">Delete</button></td>
+                   </tr>`
+
     })
+    usersList.innerHTML = result
 }
 
-const modalFunc = () => {
-    // const editModal = $('#editModal')
-    // const deleteModal = $('#deleteModal')
-    // console.log('EDIT MODAL: ' + editModal)
-
-    $('#mainTableWithUsers').on('click', 'button', onClickTableButton
-        // event.preventDefault()
-        // let targetButton = $(event.target)
-        // let userID = targetButton.data('id')
-        // console.log('USER ID FROM BUTTON TABLE: ' + userID)
-        // let action = targetButton.data('action')
-        // console.log('ACTION: ' + action)
-        //
-        // if (action === 'edit') {
-        //     console.log('ID EDIT')
-        //     await editUser(editModal, userID)
-        // } else if (action === 'delete') {
-        //     console.log('IF DELETE')
-        //     await deleteUser(deleteModal, userID)
-        // }
-    )
-};
-
-const onClickTableButton = async (event) => {
-    const editModal = $('#editModal')
-    const deleteModal = $('#deleteModal')
-    console.log('EDIT MODAL: ' + editModal)
-    event.preventDefault()
-    let targetButton = $(event.target)
-    let userID = targetButton.data('id')
-    console.log('USER ID FROM BUTTON TABLE: ' + userID)
-    let action = targetButton.data('action')
-    console.log('ACTION: ' + action)
-
-    if (action === 'edit') {
-        console.log('ID EDIT')
-        await editUser(editModal, userID)
-    } else if (action === 'delete') {
-        console.log('IF DELETE')
-        await deleteUser(deleteModal, userID)
-    }
-}
-
-// const editModal = () => {
-//     const editModal = $('#editModal')
-//     editModal.modal({
-//         keyboard: true,
-//         backdrop: "static",
-//         // show: false,
-//     }).on('show.bs.modal', '#editModal', async (event) => {
-//             event.preventDefault()
-//             let button = $(event.relatedTarget);
-//             console.log(button)
-//             let id = button.data('id');
-//             console.log('ID FROM EDIT MODAL ' + id)
-//             let action = button.data('action');
-//             await editUser($(this), id);
-//         }).on('hidden.bs.modal', (event) => {
-//
-//     });
-// }
-
-// редактируем юзера из модалки редактирования, заполняем данными, забираем данные, отправляем
-const editUser = async(modal, userID) => {
-    const user = await (await userFetchService.findOneUserById(userID)).json()
-    console.log('USER FROM EDIT_USER FUNC: ' + user.firstName + ' ' + user.email)
-    const allRoles = await (await userFetchService.findAllRoles()).json()
-    allRoles.forEach(role => console.log('ROLES: ' + role.name))
-
-    // заполняем форму юзером
-    modal.find('#editID').val(user.id).prop('disabled', true)
-    modal.find('#editFirstName').val(user.firstName)
-    modal.find('#editEmail').val(user.email)
-    modal.find('#editRoles').empty()
-
-    allRoles.forEach(role => {
-        user.roles.forEach(userRole => {
-            modal.find('#editRoles').append(new Option(role.name.replace('ROLE_', ''), role.id,
-                false, role.id == userRole.id ? true : false)).prop('required', true)
-        })
-    })
-
-    modal.find(`#formEdit`).on('submit', onSubmitEditForm)
-}
-
-const onSubmitEditForm = async (event) => {
-    event.preventDefault()
-    // event.stopPropagation()
-    let modal = $('#editModal')
-
-    console.log('EDIT BUTTON CLICKED')
-
-    let id = modal.find('#editID').val().trim()
-    console.log('USER ID FROM MODAL: ' + id)
-
-    const firstName = modal.find('#editFirstName').val().trim()
-    const email = modal.find(`#editEmail`).val().trim()
-
-    console.log('EMAIL FROM FIELD: ' + email)
-
-    const password = modal.find(`#editPassword`).val().trim()
-
-    const rolesIDFromForm = modal.find('#editRoles').val();
-    console.log('ROLES_ID: ' + rolesIDFromForm)
-
-    let userRoles = []
-
-    console.log(allRoles)
-
-    allRoles.forEach(roleFromDB => {
-        rolesIDFromForm.forEach(roleID => roleID == roleFromDB.id ? userRoles.push(roleFromDB) : null)
-    })
-
-    if (email === '' || password === '') {
-        alert('It seems You forgot email or password')
-        return
-    }
-
-    if (!isEmail(email)) {
-        alert('Wrong email format')
-        return
-    }
-
-    const data = {
-        id: id,
-        firstName: firstName,
-        email: email,
-        password: password,
-        roles: userRoles
-    }
-
-    console.log(data)
-
-    let response = await userFetchService.updateUser(data, id)
-
-    if (response.ok) {
-        await getTableWithUsers()
-        alert('User successfully updated')
-        modal.modal('hide')
-    } else {
-        alert(`response status: ${response}`)
-    }
-}
-
-
-const deleteUser = async(modal, userID) => {
-    const user = await (await userFetchService.findOneUserById(userID)).json()
-
-    console.log('USER FROM DELETE_USER FUNC: ' + user.firstName + ' ' + user.email)
-    const allRoles = await (await userFetchService.findAllRoles()).json()
-    allRoles.forEach(role => console.log('ROLES: ' + role.name))
-
-    // заполняем форму юзером
-    modal.find('#ID').val(user.id).prop('disabled', true)
-    modal.find('#firstName').val(user.firstName).prop('disabled', true)
-    modal.find('#email').val(user.email).prop('disabled', true)
-    modal.find('#roles').empty().prop('disabled', true)
-
-    allRoles.forEach(role => {
-        user.roles.forEach(userRole => {
-            modal.find('#roles').append(new Option(role.name.replace('ROLE_', ''), role.id,
-                false, role.id == userRole.id ? true : false)).prop('required', true)
-        })
-    })
-
-    modal.find('#formDelete').submit(async (event) => {
-        event.preventDefault()
-        let response = await userFetchService.deleteUser(userID)
-
-        if (response.ok) {
-            await getTableWithUsers()
-            alert(`User ${user.id} deleted`)
-            modal.modal('hide')
-        } else {
-            alert(`response status: ${response}`)
+const on = (element, event, selector, handler) => {
+    element.addEventListener(event, e => {
+        if (e.target.closest(selector)) {
+            handler(e)
         }
     })
 }
 
-const addNewUser = async() => {
-    const allRoles = await (await userFetchService.findAllRoles()).json()
+const editModal = new bootstrap.Modal(document.getElementById('editModal'))
+const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'))
 
-    const addUserForm = $('#newUser')
+on(document, 'click', '.editButton', e => {
+    const tableRow = e.target.parentNode.parentNode
+    let editIdForm = tableRow.children[0].innerHTML
 
-    allRoles.forEach(role => {
-        addUserForm.find('#newRoles').append(new Option(role.name.replace('ROLE_', ''), role.id, false, role.id == 2 ? true : false))
-    })
+    fetch(url + '/' + editIdForm)
+        .then(res => res.json())
+        .then(data => showEditModal(data))
+})
 
-    $('#addButton').on('click', async (e) => {
+on(document, 'click', '.deleteButton', e => {
+    const tableRow = e.target.parentNode.parentNode
+    let deleteIdForm = tableRow.children[0].innerHTML
+
+    fetch(url + '/' + deleteIdForm)
+        .then(res => res.json())
+        .then(data => showDeleteModal(data))
+})
+//=================== edit ===========================
+const showEditModal = (user) => {
+    const editId = document.getElementById('edit_id_input')
+    const editName = document.getElementById('edit_name_input')
+    const editSurname = document.getElementById('edit_surname_input')
+    const editAge = document.getElementById('edit_age_input')
+    const editEmail = document.getElementById('edit_email_input')
+    const editRoles = document.getElementById('edit_roles_select')
+
+    editId.value = user.id
+    editName.value = user.name
+    editSurname.value = user.surname
+    editAge.value = user.age
+    editEmail.value = user.email
+    while (editRoles.options.length) {
+        editRoles.options[0] = null;
+    }
+    fetch(urlRoles)
+        .then(res => res.json())
+        .then(roles => {
+            roles.forEach(role => {
+                user.roles.forEach(userRole => {
+                    if (userRole.id === role.id) {
+                        editRoles.append(new Option(role.name.replace("ROLE_", ""), role.id, true, true));
+                        role = true;
+                    }
+                });
+                (role !== true) ? editRoles.append(new Option(role.name.replace("ROLE_", ""), role.id)) : null;
+            });
+        });
+
+    editModal.show()
+
+    const editUserButton = document.querySelector('.editUserButton')
+    editUserButton.addEventListener('click', e => {
         e.preventDefault()
-        const firstName = addUserForm.find('#newFirstName').val().trim()
-        const email = addUserForm.find('#newEmail').val().trim()
-        const password = addUserForm.find('#newPassword').val().trim()
 
-        const rolesFromForm = addUserForm.find('#newRoles').val()
-
-        let selectedRoles = []
-        allRoles.forEach(role => {
-            rolesFromForm.forEach(roleIdFromForm => {
-                if (role.id == roleIdFromForm) {
-                    selectedRoles.push(role)
-                }
-            })
-        })
-
-        console.log('SELECTED ROLES: ' + selectedRoles)
-
-
-        // TODO вместо повтора кода сделать функции чекеры пароля и ролей и имейла
-        if (email === '' || password === '') {
-            alert('It seems You forgot email or password or roles')
-            return
+        let rolesFromForm = document.getElementById('edit_roles_select')
+        let selectedOptions = rolesFromForm.selectedOptions
+        let selected = []
+        for (let i = 0; i < selectedOptions.length; i++) {
+            selected.push({id: selectedOptions[i].value, name: 'ROLE_' + selectedOptions[i].text})
         }
-
-        if (!isEmail(email)) {
-            alert('Wrong email format')
-            return
-        }
-
-        const data = {
-            firstName: firstName,
-            email: email,
-            password: password,
-            roles: selectedRoles
-        }
-
-        const addResponse = await userFetchService.addNewUser(data)
-
-        if (addResponse.ok) {
-            await getTableWithUsers()
-            alert('User successfully create')
-
-
-            let selectors = ['#newFirstName', 'newEmail', 'newPassword']
-            selectors.forEach(selector => {
-                addUserForm.find(selector).empty()
-            })
+        let prevPass = user.password
+        let pass;
+        if (document.getElementById('edit_password_input').value === '') {
+            pass = prevPass
         } else {
-            alert('Response status: ' + addResponse.statusText)
+            pass = document.getElementById('edit_password_input').value
         }
+        let data = {
+            id: editId.value,
+            name: editName.value,
+            surname: editSurname.value,
+            age: editAge.value,
+            email: editEmail.value,
+            password: pass,
+            roles: selected
+        }
+        fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(getUsers)
+
+        editModal.hide()
+        document.getElementById('edit_password_input').value = ''
+    })
+}
+//=================== edit ===========================
+//=================== delete =========================
+const showDeleteModal = (user) => {
+    const deleteId = document.getElementById('delete_id_input')
+    const deleteName = document.getElementById('delete_name_input')
+    const deleteSurname = document.getElementById('delete_surname_input')
+    const deleteAge = document.getElementById('delete_age_input')
+    const deleteEmail = document.getElementById('delete_email_input')
+    const deleteRoles = document.getElementById('delete_roles_select')
+
+    deleteId.value = user.id
+    deleteName.value = user.name
+    deleteSurname.value = user.surname
+    deleteAge.value = user.age
+    deleteEmail.value = user.email
+    while (deleteRoles.options.length) {
+        deleteRoles.options[0] = null;
+    }
+    fetch(urlRoles)
+        .then(res => res.json())
+        .then(roles => {
+            roles.forEach(role => {
+                user.roles.forEach(userRole => {
+                    if (userRole.id === role.id) {
+                        deleteRoles.append(new Option(role.name.replace("ROLE_", ""), role.id, true, true));
+                        role = true;
+                    }
+                });
+                (role !== true) ? deleteRoles.append(new Option(role.name.replace("ROLE_", ""), role.id)) : null;
+            });
+        });
+
+    deleteModal.show()
+
+    const deleteUserButton = document.querySelector('.deleteUserButton')
+    deleteUserButton.addEventListener('click', e => {
+        e.preventDefault()
+        fetch(url + '/' + user.id, {
+            method: 'DELETE',
+        })
+            .then(getUsers)
+        deleteModal.hide()
+    })
+}
+//=================== delete =========================
+//=================== add ============================
+const name = document.getElementById('name_input')
+const surname = document.getElementById('surname_input')
+const age = document.getElementById('age_input')
+const email = document.getElementById('email_input')
+const password = document.getElementById('password_input')
+const formRoles = document.getElementById('roles')
+fetch(urlRoles)
+    .then(res => res.json())
+    .then(roles => {
+        roles.forEach(role => {
+            formRoles.append(new Option(role.name.replace("ROLE_", ""), role.id + ''));
+        })
     })
 
-}
+const addUserButton = document.querySelector('#addUser')
+addUserButton.addEventListener('click',
+    e => {
+        e.preventDefault()
+        let rolesFromForm = document.getElementById('roles')
+        let selectedOptions = rolesFromForm.selectedOptions
+        let selected = []
+        for (let i = 0; i < selectedOptions.length; i++) {
+            selected.push({id: selectedOptions[i].value, name: 'ROLE_' + selectedOptions[i].text})
+        }
 
-const isEmail = (email) => {
-    let regExp = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/
-    return regExp.test(email)
-}
-
+        let data = JSON.stringify({
+            name: name.value,
+            surname: surname.value,
+            age: age.value,
+            email: email.value,
+            password: password.value,
+            roles: selected
+        })
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: data
+        })
+            .then(getUsers)
+        name.value = ''
+        surname.value = ''
+        age.value = ''
+        email.value = ''
+        password.value = ''
+        formRoles.value = ''
+    })
+//=================== add ============================

@@ -43,147 +43,17 @@
                                 <td>
                                     <th:block th:each="role : ${auth_user.getRoles()}" th:text="${role.toString()} + ' '">role</th:block>
                                 </td>
-<!--                                <td>-->
-<!--                                    &lt;!&ndash; Button trigger modal edit &ndash;&gt;-->
-<!--                                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal"-->
-<!--                                            th:attr="data-target='#edit-user' + ${user.id} + '', data='' + ${user}">-->
-<!--                                        Edit-->
-<!--                                    </button>-->
-
-<!--                                    &lt;!&ndash; Modal edit&ndash;&gt;-->
-<!--                                    <div class="modal" th:id="'edit-user' + ${user.id}" tabindex="-1" role="dialog"-->
-<!--                                         aria-labelledby="edit-userLabel" aria-hidden="true">-->
-<!--                                        <div class="modal-dialog" role="document">-->
-<!--                                            <div class="modal-content">-->
-<!--                                                <div class="modal-header">-->
-<!--                                                    <h5 class="modal-title" id="edit-userLabel">Edit user</h5>-->
-<!--                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<!--                                                        <span aria-hidden="true">&times;</span>-->
-<!--                                                    </button>-->
-<!--                                                </div>-->
-<!--                                                &lt;!&ndash;                                                    Form for edit user&ndash;&gt;-->
-<!--                                                <div class="modal-body">-->
-<!--                                                    <div class="container-fluid col-7">-->
-<!--                                                        <form th:method="POST" th:action="@{/admin/users/{id}/edit(id=${user.getId()})}"-->
-<!--                                                              th:href="@{/admin/users/{id}/edit(id=${user.getId()})}"-->
-<!--                                                              th:object="${user}"-->
-<!--                                                              class="text-center" id="formEdit">-->
-<!--                                                            <div class="mb-3">-->
-<!--                                                                <label for="editFirstName"><strong>First Name</strong></label>-->
-<!--                                                                <input autocomplete="on" class="form-control" type="text"-->
-<!--                                                                       th:value="${user.firstName}"-->
-
-<!--                                                                       id="editFirstName"-->
-<!--                                                                       placeholder="Enter First Name">-->
-<!--                                                            </div>-->
-
-<!--                                                            <div class="mb-3">-->
-<!--                                                                <label for="editEmail"><strong>Email</strong></label>-->
-<!--                                                                <input autocomplete="on" class="form-control" type="email"-->
-<!--                                                                       th:value="${user.email}"-->
-
-<!--                                                                       id="editEmail"-->
-<!--                                                                       placeholder="Enter Email">-->
-<!--                                                            </div>-->
-
-<!--                                                            <div class="mb-3">-->
-<!--                                                                <label for="edit-password"><strong>Password</strong></label>-->
-<!--                                                                <input required class="form-control" type="password"-->
-
-
-<!--                                                                       id="edit-password"-->
-<!--                                                                       placeholder="Enter Password">-->
-<!--                                                            </div>-->
-
-<!--                                                            <div class="mb-3">-->
-<!--                                                                <label for="edit-roles"><strong>Role</strong></label>-->
-<!--                                                                <select class="form-control" name="roles"-->
-<!--                                                                        id="edit-roles" multiple size="2"-->
-<!--                                                                        th:value="${roles}"-->
-<!--                                                                >-->
-<!--                                                                    <option th:each="role : ${roles}"-->
-<!--                                                                            th:value="${role.getId()}"-->
-<!--                                                                            th:text="${role.toString()}"-->
-<!--                                                                            th:selected="${#lists.contains(user.roles, role)}">role-->
-<!--                                                                    </option>-->
-<!--                                                                </select>-->
-<!--                                                            </div>-->
-<!--                                                        </form>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                                <div class="modal-footer">-->
-<!--                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
-<!--                                                    <button form="formEdit" type="submit" class="btn btn-primary">-->
-<!--                                                        Edit</button>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-
-<!--                                    &lt;!&ndash;                                        <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_user"&ndash;&gt;-->
-<!--                                    &lt;!&ndash;                                           role="button"&ndash;&gt;-->
-<!--                                    &lt;!&ndash;                                           th:href="@{/admin/users/{id}/edit/(id=${user.getId()})}">Edit&ndash;&gt;-->
-<!--                                    &lt;!&ndash;                                        </a>&ndash;&gt;-->
-<!--                                </td>-->
-<!--                                <td>-->
-<!--                                    <a class="btn btn-danger btn-sm" role="button"-->
-<!--                                       th:href="@{/admin/users/{id}/delete(id=${user.getId()})}">Delete</a>-->
-<!--                                </td>-->
                             </tr>
                         </table>
                     </div>
                 </div>
-
-                <!--                    Tab panel for add new user-->
-<!--                <div class="tab-pane fade card" id="new-user" role="tabpanel" aria-labelledby="create-tab">-->
-<!--                    <h4 class="bg-light card-header">Add new user</h4>-->
-<!--                    <div class="container-fluid card-body d-flex justify-content-center">-->
-<!--                        <form id="formCreate" th:method="POST" th:action="@{/admin/users/create}" th:object="${new_user}"-->
-<!--                              class="text-center col-4">-->
-<!--                            <div class="mb-3">-->
-<!--                                <label for="firstName"><strong>First Name</strong></label>-->
-<!--                                <input class="form-control" type="text" th:field="*{firstName}"-->
-<!--                                       id="firstName"-->
-<!--                                       placeholder="Enter First Name">-->
-<!--                            </div>-->
-
-<!--                            <div class="mb-3">-->
-<!--                                <label for="email"><strong>Email</strong></label>-->
-<!--                                <input required class="form-control" type="email" th:field="*{email}" id="email"-->
-<!--                                       placeholder="Enter Email">-->
-<!--                            </div>-->
-
-<!--                            <div class="mb-3">-->
-<!--                                <label for="password"><strong>Password</strong></label>-->
-<!--                                <input required class="form-control" type="password" th:field="*{password}" id="password"-->
-<!--                                       placeholder="Enter Password">-->
-<!--                            </div>-->
-
-<!--                            <div class="mb-3">-->
-<!--                                <label for="roles"><strong>Role</strong></label>-->
-<!--                                <select required class="form-control" name="roles" id="roles" multiple size="2"-->
-<!--                                        th:field="*{roles}">-->
-<!--                                    <option th:each="role : ${roles}" th:value="${role.getId()}"-->
-<!--                                            th:text="${role.toString()}">role-->
-<!--                                    </option>-->
-<!--                                </select>-->
-<!--                            </div>-->
-
-<!--                            <button class="btn btn-success btn-lg" type="submit">Add new user</button>-->
-<!--                        </form>-->
-<!--                    </div>-->
-<!--                </div>-->
             </div>
-
-<!--        </div>-->
     </section>
 
     <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-<script src="../static/js/forAdminPage.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </body>
 </html>
